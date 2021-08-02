@@ -10,7 +10,6 @@ document.querySelector('#register').addEventListener('click', () => {
 
 const signInWithGoogle = () => {
   var provider = new firebase.auth.GoogleAuthProvider();
-  // console.log(provider)
   firebase.auth()
   .signInWithPopup(provider)
   .then((result) => {
@@ -20,7 +19,7 @@ const signInWithGoogle = () => {
 
     // The signed-in user info.
     var user = result.user;
-    window.location = 'writeNote.html';
+    window.location = 'dashboard.html';
   }).catch((error) => {
     // Handle Errors here.
     var errorCode = error.code;
