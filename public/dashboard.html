@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fire Notes</title>
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <style type="text/css">
+      
+    </style>
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script src="js/signIn.js"></script>
+  </head>
+  <body>
+    <div class="header-container">
+      
+    </div>
+    <div class="body-container">
+      <div class="button-container">
+        <button class="button book-button" onclick="toggleBookModal()">
+          Book
+        </button>
+      </div>
+      <div class="calendar-container">
+          <!-- Calendar Here? -->
+    </div>
+
+<div id="bookModal" class="modal">
+    <div class="modal-background"></div> <!-- Makes the background dark-->
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <div class="booking-title">
+                <h1>Book a Room</h1>
+            </div>
+        </header>
+        <div class="modal-card-body">
+            <div class="modal-section-container">
+                <div class="modal-left">
+                    <label class="label">Select a Room</label>
+                    <div class="control">
+                        <div class="select">
+                            <select>
+                            <option>Room 242</option>
+                            <option>Room 452</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <span class="spacer"></span>
+
+                    <label class="label">Invite Collaborators</label>
+                    <div class="control">
+                        <input class="input is-normal" id="editTitleInput" placeholder="Invite by Email" type="text">
+                    </div>
+
+                    <span class="spacer"></span>
+
+                    <label class="label">Invited:</label>
+                    <div class="collaborator-container">
+                        <p class="no-friends">Currently no one invited</p>
+                    </div>
+                </div>
+                <div class="modal-right">
+                    <div class="square"></div>
+                    
+                    <div class="book-button-container">
+                        <button class="button is-danger is-light" onclick="toggleBookModal()">Cancel</button>
+                        <span class="spacer"></span>
+                        <button class="button is-success is-light" onclick="toggleBookModal()">Book</button>
+                    </div>
+                    
+
+                </div>
+            </div>
+            </div>
+            <footer class="modal-card-foot">
+                <h3>COVID-19 Regulations</h3>
+                <p>haufashfasfasf</p>
+            </footer>
+        </div>
+    </div>
+</div>
+
+  </body>
+
+    <script src="js/dashboard.js"></script>
+</html>
