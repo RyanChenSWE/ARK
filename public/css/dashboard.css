@@ -1,0 +1,68 @@
+html,
+      body {
+          font-family: 'Open Sans';
+      }
+
+      img {
+          padding: 5px;
+          border: 1px solid #ccc;
+      }
+
+.body-container {
+  display: flex; 
+  justify-content: space-between; 
+}
+
+.button-container {
+  display: flex; 
+  flex-direction: column; 
+}
+
+.header-container {
+  height: 60px; 
+}
+
+.book-button {
+  width: 250px; 
+  margin-left: 30px; 
+}
+
+.modal-section-container {
+    display: flex; 
+    justify-content: space-between;
+}
+
+.square {
+  height: 300px;
+  width: 300px;
+  background-color: #555;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+.booking-title {
+    display: flex; 
+    justify-content: center;
+}
+
+.modal-left-header {
+    padding: 10px;
+}
+
+.spacer {
+    padding: 10px;
+}
+
+.no-friends {
+    font-style: italic;
+    opacity: 0.5;
+}
+
+.book-button-container {
+    display: flex; 
+    justify-content: flex-end; 
+    margin-top: 10px;
+    
+}
