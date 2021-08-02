@@ -1,10 +1,10 @@
 document.querySelector('#login').addEventListener('click', () => {
-  document.querySelector('#loginModal').classList.toggle('is-active')
+  toggleLoginModal();
 })
 
 
 document.querySelector('#register').addEventListener('click', () => {
-  document.querySelector('#signUpModal').classList.toggle('is-active')
+  toggleSignUpModal();
 })
 
 
@@ -39,12 +39,12 @@ const signInWithGoogle = () => {
 }
 
 
-const closeLoginModal = () => {
+const toggleLoginModal = () => {
   const loginModal = document.querySelector('#loginModal');
   loginModal.classList.toggle('is-active')
 }
 
-const closeSignUpModal = () => {
+const toggleSignUpModal = () => {
   const signUpModal = document.querySelector('#signUpModal');
   signUpModal.classList.toggle('is-active')
 }
