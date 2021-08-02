@@ -9,26 +9,26 @@ html,
       }
 
 .body-container {
-  display: flex; 
-  justify-content: space-between; 
+  display: flex;
+  justify-content: space-between;
 }
 
 .button-container {
-  display: flex; 
-  flex-direction: column; 
+  display: flex;
+  flex-direction: column;
 }
 
 .header-container {
-  height: 60px; 
+  height: 60px;
 }
 
 .book-button {
-  width: 250px; 
-  margin-left: 30px; 
+  width: 250px;
+  margin-left: 30px;
 }
 
 .modal-section-container {
-    display: flex; 
+    display: flex;
     justify-content: space-between;
 }
 
@@ -43,7 +43,7 @@ h1 {
 }
 
 .booking-title {
-    display: flex; 
+    display: flex;
     justify-content: center;
 }
 
@@ -61,8 +61,8 @@ h1 {
 }
 
 .book-button-container {
-    display: flex; 
-    justify-content: flex-end; 
+    display: flex;
+    justify-content: flex-end;
     margin-top: 10px;
-    
+
 }
