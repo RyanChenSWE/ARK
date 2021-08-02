@@ -12,7 +12,7 @@ body {
     ), url('../img/homepage_background.jpg') no-repeat center center fixed;
   background-size: cover;
   height: 100vh;
-  color: var(--textDark);
+  color: white;
 }
 
 .field:not(:last-child) {
@@ -21,7 +21,7 @@ body {
 
 .register {
   margin-top: 10rem;
-  background: white;
+  background: rgba(255,255,255,0.3);
   border-radius: 10px;
 }
 
@@ -47,7 +47,7 @@ body {
 }
 
 .left p {
-  color: var(--textLight);
+  color: white;
   font-size: 1.15rem;
 }
 
@@ -59,12 +59,12 @@ body {
 .right .description {
   margin-top: 1rem;
   margin-bottom: 1rem !important;
-  color: var(--textLight);
+  color: white;
   font-size: 1.15rem;
 }
 
 .right small {
-  color: var(--textLight);
+  color: white;
 }
 
 input {
@@ -78,7 +78,7 @@ input:focus {
 
 .fab,
 .fas {
-  color: var(--textLight);
+  color: white;
   margin-right: 1rem;
 }
 

@@ -1,4 +1,14 @@
-const signIn = () => {
+document.querySelector('#login').addEventListener('click', () => {
+  document.querySelector('#loginModal').classList.toggle('is-active')
+})
+
+
+document.querySelector('#register').addEventListener('click', () => {
+  document.querySelector('#signUpModal').classList.toggle('is-active')
+})
+
+
+const signInWithGoogle = () => {
   var provider = new firebase.auth.GoogleAuthProvider();
   // console.log(provider)
   firebase.auth()
@@ -27,4 +37,15 @@ const signIn = () => {
     };
     console.log(err);
   });
+}
+
+
+const closeLoginModal = () => {
+  const loginModal = document.querySelector('#loginModal');
+  loginModal.classList.toggle('is-active')
+}
+
+const closeSignUpModal = () => {
+  const signUpModal = document.querySelector('#signUpModal');
+  signUpModal.classList.toggle('is-active')
 }
