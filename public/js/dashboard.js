@@ -5,6 +5,7 @@ let  collaboratorContainer = document.querySelector('#collaborator-container');
 
 function toggleBookModal() {
     bookModal.classList.toggle('is-active');
+    createAlert('Room booked!', 'success')
     resetBookModal();
 }
 
@@ -46,6 +47,22 @@ function resetBookModal() {
     collaboratorInput.classList.remove("is-success");
     noFriends.style.display = "";
     emailError.style.display = "none";
+}
+
+function createAlert(msg, state) {
+    const alertDiv = document.createElement('div')
+    alertDiv.className = `notification is-${state} is-light has-text-centered`
+    const alertBtn = document.createElement('button')
+    alertBtn.className = 'delete'
+    alertBtn.addEventListener('click', () => {
+        alertDiv.parentNode.removeChild(alertDiv)
+    })
+    const alertText = document.createElement('p')
+    alertText.className = 'subtitle'
+    alertText.innerText = msg
+    alertDiv.appendChild(alertBtn)
+    alertDiv.appendChild(alertText)
+    document.querySelector('.notification-container').appendChild(alertDiv)
 }
 
 collaboratorInput.addEventListener('change', (key) => {

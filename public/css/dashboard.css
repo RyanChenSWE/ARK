@@ -67,22 +67,28 @@ h1 {
 }
 
 .regulations {
-    display: flex; 
-    flex-direction: column; 
+    display: flex;
+    flex-direction: column;
 }
 
 .collaborator-container {
-    display: flex; 
-    flex-direction: column; 
+    display: flex;
+    flex-direction: column;
 }
 
 .email-error {
-    color: red; 
-    font-size: 15px; 
-    padding: 5px; 
-    display: none; 
+    color: red;
+    font-size: 15px;
+    padding: 5px;
+    display: none;
 }
 
 .collaborator-email:hover {
     text-decoration: line-through;
+}
+
+.notification-container {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
 }
