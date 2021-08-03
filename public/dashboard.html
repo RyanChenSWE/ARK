@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+    <link href="css/bulma-calendar.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/dashboard.css" />
     <style type="text/css">
 
@@ -112,18 +113,20 @@
                             <p class="no-friends" id="no-friends">Currently no one invited</p>
                         </div>
                     </div>
+                  
+                    <span class="spacer"></span>
+                  
                     <div class="modal-right">
-                        <div class="square"></div>
+                         <label class="label">Date and Time Selector</label>
+                         <input id="embeded-calendar" type="datetime">
 
                         <div class="book-button-container">
                             <button class="button is-danger is-light" onclick="toggleBookModal()">Cancel</button>
-                            <span class="spacer"></span>
-                            <button class="button is-success is-light" onclick="toggleBookModal()">Book</button>
-                        </div>
-
-
+                            <span class="spacer"></span> 
+                            <button class="button is-success is-light" onclick="bookRoom()">Book</button>
+                        </div> 
                     </div>
-                </div>
+
             </div>
             <footer class="modal-card-foot">
                 <div class="regulations">
@@ -133,7 +136,7 @@
             </footer>
         </div>
     </div>
-    </div>
+   </div>
 
 </body>
 
@@ -147,4 +150,6 @@
     document.querySelector('iframe#calendar').setAttribute('src', calendarSrc)
 </script>
 
+    <script src="js/bulma-calendar.min.js"></script>
+    <script src="js/dashboard.js"></script>
 </html>
