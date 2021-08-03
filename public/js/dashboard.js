@@ -29,15 +29,8 @@ function toggleBookModal() {
 
 function bookRoom() {
   bookModal.classList.toggle("is-active");
-  console.log(calendars[0]);
   const roomEl = bookModal.querySelector("select");
   const roomId = roomEl.options[roomEl.selectedIndex].value;
-  let date = calendars[0].date.start.toJSON().slice(0, 10); //YYYY-MM-DD
-  let time =
-    calendars[0].time.start.toJSON().slice(11, 13) -
-    7 +
-    calendars[0].time.start.toJSON().slice(13, 16);
-  console.log("Room Booked!", date, time);
   addAppointment(
     roomId,
     calendars[0].time.start.toJSON(),
@@ -129,12 +122,13 @@ function initiateEmbededCalendar() {
   calendars = bulmaCalendar.attach('[type="datetime"]', {
     startDate: currentDate,
     minDate: currentDate,
-    showHeader: false,
     displayMode: "inline",
+    color: "info",
+    isRange: true,
+    showHeader: false,
     showClearButton: false,
     showTodayButton: false,
     showFooter: false,
-    color: "info",
     minuteSteps: 30,
   });
 }
@@ -152,12 +146,18 @@ function logOut() {
 }
 
 function addAppointment(roomId, startTime, endTime) {
+  // Firebase will ignore the field if it has [](empty array)
+  let guests = collaboratorArray;
+  if (guests.length === 0) {
+    guests = "None";
+  }
+
   firebase
     .database()
     .ref(`rooms/${roomId}/appointments`)
     .push({
-      name: googleUser.uid || "Anonymous",
-      guests: collaboratorArray,
+      name: googleUser.displayName || "Anonymous",
+      guests,
       startTime,
       endTime,
     })
