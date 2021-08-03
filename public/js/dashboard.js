@@ -128,6 +128,7 @@ function initiateEmbededCalendar() {
         showClearButton: false, 
         showTodayButton: false,
         showFooter: false,
+        color: "info",
         minuteSteps: 30
     });
 }
