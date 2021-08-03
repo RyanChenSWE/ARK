@@ -2,7 +2,7 @@ const collaboratorInput = document.querySelector("#addCollaborators");
 const emailError = document.querySelector("#email-error");
 let noFriends = document.querySelector("#no-friends");
 let collaboratorContainer = document.querySelector("#collaborator-container");
-let googleUserId;
+let googleUser;
 var calendars;
 var collaboratorArray = [];
 
@@ -12,10 +12,9 @@ window.onload = (event) => {
   // Use this to retain user state between html pages.
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      console.log("Logged in as: " + user.displayName);
       document.querySelector("#user").innerText =
         user.displayName || "Anonymous";
-      googleUserId = user;
+      googleUser = user;
     } else {
       // If not logged in, navigate back to login page.
       window.location = "index.html";
@@ -30,13 +29,21 @@ function toggleBookModal() {
 
 function bookRoom() {
   bookModal.classList.toggle("is-active");
+  console.log(calendars[0]);
+  const roomEl = bookModal.querySelector("select");
+  const roomId = roomEl.options[roomEl.selectedIndex].value;
   let date = calendars[0].date.start.toJSON().slice(0, 10); //YYYY-MM-DD
   let time =
     calendars[0].time.start.toJSON().slice(11, 13) -
     7 +
     calendars[0].time.start.toJSON().slice(13, 16);
   console.log("Room Booked!", date, time);
-  console.log("Collaborators: ", collaboratorArray);
+  addAppointment(
+    roomId,
+    calendars[0].time.start.toJSON(),
+    calendars[0].time.end.toJSON()
+  );
+  createAlert(`Room ${roomId} booked!`, "success");
 }
 
 function validateEmail(email) {
@@ -141,5 +148,20 @@ function logOut() {
     })
     .catch((err) => {
       createAlert(err.message, "danger");
+    });
+}
+
+function addAppointment(roomId, startTime, endTime) {
+  firebase
+    .database()
+    .ref(`rooms/${roomId}/appointments`)
+    .push({
+      name: googleUser.uid || "Anonymous",
+      guests: collaboratorArray,
+      startTime,
+      endTime,
+    })
+    .then((data) => {
+      console.log(data);
     });
 }
