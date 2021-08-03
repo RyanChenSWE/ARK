@@ -113,21 +113,21 @@
                             <p class="no-friends" id="no-friends">Currently no one invited</p>
                         </div>
                     </div>
-                  
+
                     <span class="spacer"></span>
-                  
+
                     <div class="modal-right">
-                         <label class="label">Date and Time Selector</label>
-                         <input id="embeded-calendar" type="datetime">
+                        <label class="label">Date and Time Selector</label>
+                        <input id="embeded-calendar" type="datetime">
 
                         <div class="book-button-container">
                             <button class="button is-danger is-light" onclick="toggleBookModal()">Cancel</button>
-                            <span class="spacer"></span> 
+                            <span class="spacer"></span>
                             <button class="button is-success is-light" onclick="bookRoom()">Book</button>
-                        </div> 
+                        </div>
                     </div>
+                </div>
             </div>
-        </div>
 
             <footer class="modal-card-foot">
                 <div class="regulations">
@@ -137,7 +137,7 @@
             </footer>
         </div>
     </div>
-   </div>
+    </div>
 
 </body>
 
@@ -151,4 +151,5 @@
     const calendarSrc = `https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23039BE5&amp;ctz=${toURL}&amp;src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;color=%230B8043&amp;title=Global%20Calendar&amp;showPrint=0`
     document.querySelector('iframe#calendar').setAttribute('src', calendarSrc)
 </script>
+
 </html>
