@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Fire Notes</title>
+    <title>Book a Room</title>
 
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
@@ -59,14 +59,15 @@
 
                     <label class="label">Invite Collaborators</label>
                     <div class="control">
-                        <input class="input is-normal" id="editTitleInput" placeholder="Invite by Email" type="text">
+                        <input class="input is-normal" id="addCollaborators" placeholder="Invite by Email" type="text">
+                        <p class="email-error" id="email-error">Valid Email Address Required</p>
                     </div>
 
                     <span class="spacer"></span>
 
                     <label class="label">Invited:</label>
-                    <div class="collaborator-container">
-                        <p class="no-friends">Currently no one invited</p>
+                    <div id="collaborator-container" class="collaborator-container">
+                        <p class="no-friends" id="no-friends">Currently no one invited</p>
                     </div>
                 </div>
                 <div class="modal-right">
@@ -83,8 +84,11 @@
             </div>
             </div>
             <footer class="modal-card-foot">
-                <h3>COVID-19 Regulations</h3>
-                <p>haufashfasfasf</p>
+                <div class="regulations">
+                    <label class="label">COVID-19 Regulations</label>
+                    <p>What do I even write here? Lorem Ipsum.</p>
+                </div>
+                
             </footer>
         </div>
     </div>
