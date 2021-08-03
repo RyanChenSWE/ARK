@@ -98,3 +98,15 @@ collaboratorInput.addEventListener("change", (key) => {
     collaboratorInput.classList.add("is-danger");
   }
 });
+
+function logOut() {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      window.location = "index.html";
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
