@@ -1,12 +1,12 @@
 html,
-      body {
-          font-family: 'Open Sans';
-      }
+body {
+  font-family: "Open Sans";
+}
 
-      img {
-          padding: 5px;
-          border: 1px solid #ccc;
-      }
+img {
+  padding: 5px;
+  border: 1px solid #ccc;
+}
 
 .body-container {
   display: flex;
@@ -18,18 +18,14 @@ html,
   flex-direction: column;
 }
 
-.header-container {
-  height: 60px;
-}
-
 .book-button {
   width: 250px;
   margin-left: 30px;
 }
 
 .modal-section-container {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .square {
@@ -39,56 +35,57 @@ html,
 }
 
 h1 {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 .booking-title {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .modal-left-header {
-    padding: 10px;
+  padding: 10px;
 }
 
 .spacer {
-    padding: 10px;
+  padding: 10px;
 }
 
 .no-friends {
-    font-style: italic;
-    opacity: 0.5;
+  font-style: italic;
+  opacity: 0.5;
 }
 
 .book-button-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
 
 .regulations {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .collaborator-container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .email-error {
-    color: red;
-    font-size: 15px;
-    padding: 5px;
-    display: none;
+  color: red;
+  font-size: 15px;
+  padding: 5px;
+  display: none;
 }
 
 .collaborator-email:hover {
-    text-decoration: line-through;
+  text-decoration: line-through;
 }
 
 .notification-container {
-    position: fixed;
-    width: 100%;
-    z-index: 1;
+  position: fixed;
+  width: 100%;
+  /* To get above navbar */
+  z-index: 40;
 }
