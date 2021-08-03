@@ -18,7 +18,6 @@
     <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-    <script src="js/signIn.js"></script>
   </head>
   <body>
     <div class="header-container">
@@ -34,7 +33,7 @@
           <!-- Calendar Here? -->
     </div>
     <div>
-        <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23039BE5&amp;ctz=America%2FLos_Angeles&amp;src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;color=%230B8043&amp;title=Global%20Calendar&amp;showPrint=0" style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+        <iframe id="calendar" src="" style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no"></iframe>
     </div>
 
 <div id="bookModal" class="modal">
@@ -91,7 +90,6 @@
                     <label class="label">COVID-19 Regulations</label>
                     <p>What do I even write here? Lorem Ipsum.</p>
                 </div>
-                
             </footer>
         </div>
     </div>
@@ -100,4 +98,12 @@
   </body>
 
     <script src="js/dashboard.js"></script>
+    <script>
+        <!-- Initialize google calendar according to user's timezone -->
+        <!-- From https://stackoverflow.com/questions/9772955/how-can-i-get-the-timezone-name-in-javascript -->
+        const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone
+        const toURL = encodeURIComponent(userTZ)
+        const calendarSrc = `https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23039BE5&amp;ctz=${toURL}&amp;src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;color=%230B8043&amp;title=Global%20Calendar&amp;showPrint=0`
+        document.querySelector('iframe#calendar').setAttribute('src', calendarSrc)
+    </script>
 </html>
