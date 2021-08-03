@@ -34,7 +34,7 @@ const signInWithGoogle = () => {
         email,
         credential,
       };
-      console.log(err);
+      createAlert(error.message);
     });
 };
 
@@ -54,7 +54,6 @@ const signInWithEmail = () => {
       window.location = "dashboard.html";
     })
     .catch((err) => {
-      console.log(err);
       createAlert(err.message, "danger");
     });
 };

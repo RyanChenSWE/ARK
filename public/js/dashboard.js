@@ -107,6 +107,6 @@ function logOut() {
       window.location = "index.html";
     })
     .catch((err) => {
-      console.log(err);
+      createAlert(err.message, "danger");
     });
 }
