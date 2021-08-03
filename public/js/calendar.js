@@ -6,8 +6,8 @@ var now = new Date();
 			twoHoursLater = twoHoursLater.toISOString();
 			
 			// google api console clientID and apiKey (https://code.google.com/apis/console/#project:568391772772)
-			var clientId = '522733656862-bt1amsvi5crd27ur9eu3a394421c5f5b.apps.googleusercontent.com';
-			var apiKey = 'AIzaSyAWfyd2stNVDx89KDE001VbHjW5e2CrJQA';
+			var clientId = 'hidden';
+			var apiKey = 'hidden';
 
 			// enter the scope of current project (this API must be turned on in the google console)
 			var scopes = 'https://www.googleapis.com/auth/calendar';
