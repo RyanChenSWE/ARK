@@ -84,3 +84,33 @@ function createAlert(msg, state) {
   alertDiv.appendChild(alertText);
   document.querySelector(".notification-container").appendChild(alertDiv);
 }
+
+document
+  .querySelector("#signUpModal")
+  .querySelector("form")
+  .addEventListener("submit", (e) => {
+    e.preventDefault();
+    const el = e.target;
+    const emailEl = el.querySelector('input[type="email"]');
+    const passwordEl = el.querySelector("#password");
+    const confirmPasswordEl = el.querySelector("#confirm_password");
+    if (passwordEl.value != confirmPasswordEl.value) {
+      createAlert("Password doesn't match. Please try again.", "danger");
+    } else {
+      // Sign in with Email: https://firebase.google.com/docs/auth/web/password-auth
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(emailEl.value, passwordEl.value)
+        .then((userCredentials) => {
+          window.location = "dashboard.html";
+        })
+        .catch((err) => {
+          createAlert(err.message, "danger");
+        });
+
+      emailEl.value = "";
+      passwordEl.value = "";
+    }
+
+    confirmPasswordEl.value = "";
+  });
