@@ -86,3 +86,8 @@ h1 {
 .collaborator-email:hover {
     text-decoration: line-through;
 }
+
+.avaliable-times-container {
+    display: flex;
+    flex-direction: column;
+}
