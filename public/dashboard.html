@@ -63,7 +63,7 @@
 
     <div class="body-container container mt-5">
         <div class="button-container">
-            <button class="button book-button is-info" onclick="toggleBookModal()">
+            <button class="button book-button is-info" id="butt">
                 <span class="icon">
                     <i class="fas fa-calendar-check"></i>
                 </span>
@@ -91,6 +91,7 @@
                         <div class="control">
                             <div class="select">
                                 <select class="option-container" id="options-container"></select>
+
                             </div>
                         </div>
 
@@ -118,9 +119,9 @@
                         <input id="embeded-calendar" type="datetime">
 
                         <div class="book-button-container">
-                            <button class="button is-danger is-light" onclick="toggleBookModal()">Cancel</button>
+                            <button class="button is-danger is-light" id="cancel"">Cancel</button>
                             <span class="spacer"></span>
-                            <button class="button is-success is-light" onclick="bookRoom()">Book</button>
+                            <button class="button is-success is-light" id="book" >Book</button>
                         </div>
                     </div>
                 </div>
@@ -129,7 +130,7 @@
             <footer class="modal-card-foot">
                 <div class="regulations">
                     <label class="label">COVID-19 Regulations</label>
-                    <p>What do I even write here? Lorem Ipsum.</p>
+                    <p></p>
                 </div>
             </footer>
         </div>
@@ -139,13 +140,16 @@
 </body>
 
 <script src="js/bulma-calendar.min.js"></script>
+<script src="js/moment.js"></script>
 <script src="js/dashboard.js"></script>
+<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+<script type="module" src="js/calendar.js"></script>
 <script>
     // Initialize google calendar according to user's timezone
     // From https://stackoverflow.com/questions/9772955/how-can-i-get-the-timezone-name-in-javascript
     const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone
     const toURL = encodeURIComponent(userTZ)
-    const calendarSrc = `https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23039BE5&amp;ctz=${toURL}&amp;src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;color=%230B8043&amp;title=Global%20Calendar&amp;showPrint=0`
+    const calendarSrc = `https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=${toURL}&amp;src=YTI1cDljOWU4MXV1bWJqdGQwN3EzOXJudXNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;color=%23D50000`
     document.querySelector('iframe#calendar').setAttribute('src', calendarSrc)
 </script>
 

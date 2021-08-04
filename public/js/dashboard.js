@@ -4,10 +4,14 @@ let noFriends = document.querySelector("#no-friends");
 let collaboratorContainer = document.querySelector("#collaborator-container");
 let googleUser;
 var calendars;
+var startTimeString;
+var endTimeString;
 var collaboratorArray = [];
 
 initiateEmbededCalendar();
-
+document.querySelector('#butt').addEventListener('click', toggleBookModal)
+document.querySelector('#cancel').addEventListener('click', toggleBookModal)
+document.querySelector('#book').addEventListener('click', bookRoom)
 window.onload = (event) => {
   // Use this to retain user state between html pages.
   firebase.auth().onAuthStateChanged(function (user) {
@@ -19,6 +23,9 @@ window.onload = (event) => {
       if (googleUser.email == "admin@cssiark.com") {
         isAdmin(); 
       }      
+
+      setRoomInfo();
+
     } else {
       // If not logged in, navigate back to login page.
       window.location = "index.html";
@@ -34,15 +41,14 @@ function toggleBookModal() {
 }
 
 function bookRoom() {
-  bookModal.classList.toggle("is-active");
   const roomEl = bookModal.querySelector("select");
   const roomId = roomEl.options[roomEl.selectedIndex].value;
-  addAppointment(
-    roomId,
-    calendars[0].time.start.toJSON(),
-    calendars[0].time.end.toJSON()
-  );
-  createAlert(`Room ${roomId} booked!`, "success");
+  let startTime = calendars[0].time.start;
+  let endTime = calendars[0].time.end;
+
+  startTime.setDate(calendars[0].date.start.getDate());
+  endTime.setDate(calendars[0].date.start.getDate());
+  addAppointment(roomId, startTime, endTime);
 }
 
 function validateEmail(email) {
@@ -130,7 +136,7 @@ function createAlert(msg, state) {
   });
   const alertText = document.createElement("p");
   alertText.className = "subtitle";
-  alertText.innerText = msg;
+  alertText.innerHTML = msg;
   alertDiv.appendChild(alertBtn);
   alertDiv.appendChild(alertText);
   document.querySelector(".notification-container").appendChild(alertDiv);
@@ -138,9 +144,11 @@ function createAlert(msg, state) {
 
 function initiateEmbededCalendar() {
   let currentDate = new Date().toJSON().slice(0, 10);
-
+    console.log('hello');
   calendars = bulmaCalendar.attach('[type="datetime"]', {
     startDate: currentDate,
+    startTime: getNearestHalfHourTime(),
+    endTime: getNearestHalfHourTime(),
     minDate: currentDate,
     displayMode: "inline",
     color: "info",
@@ -151,6 +159,9 @@ function initiateEmbededCalendar() {
     showFooter: false,
     minuteSteps: 30,
   });
+  startTimeString = calendars[0].time.start.toJSON().toString()
+  endTimeString = calendars[0].time.end.toJSON().toString()
+  console.log(startTimeString)
 }
 
 function logOut() {
@@ -182,16 +193,77 @@ function addAppointment(roomId, startTime, endTime) {
     guests = "None";
   }
 
-  firebase
+  const appointmentsRef = firebase
     .database()
-    .ref(`rooms/${roomId}/appointments`)
-    .push({
-      name: googleUser.displayName || "Anonymous",
-      guests,
-      startTime,
-      endTime,
-    })
-    .then((data) => {
-      console.log(data);
-    });
+    .ref(`rooms/${roomId}/appointments`);
+
+  const resp = isOverlapped(appointmentsRef, startTime, endTime);
+  if (!resp[0]) {
+    appointmentsRef
+      .push({
+        name: googleUser.displayName || "Annonymous",
+        guests,
+        startTime: startTime.toJSON(),
+        endTime: endTime.toJSON(),
+      })
+      .then(() => {
+        bookModal.classList.toggle("is-active");
+        createAlert(`Room ${roomId} booked!`, "success");
+      });
+  } else {
+    createAlert(
+      `Your appointment is conflicting with another event ends at <b>${moment(
+        resp[1]
+      ).format("MMMM Do YYYY, h:mm a")}</b>.`,
+      "warning"
+    );
+  }
 }
+
+document
+  .querySelector("#bookModal")
+  .querySelector("select")
+  .addEventListener("change", (e) => {
+    setRoomInfo();
+  });
+
+function setRoomInfo() {
+  const selectEl = document.querySelector("#bookModal").querySelector("select");
+  const roomId = selectEl.options[selectEl.selectedIndex].value;
+  // Add short summary retrieved from firebase to book modal.
+  const roomRef = firebase.database().ref(`rooms/${roomId}`);
+  const summaryEl = document
+    .querySelector("#bookModal")
+    .querySelector(".regulations");
+  roomRef.on("value", (snapshot) => {
+    const data = snapshot.val();
+    summaryEl.querySelector("label").innerText = data.location;
+    summaryEl.querySelector("p").innerText = "Capacity: " + data.capacity;
+  });
+}
+
+function isOverlapped(appointmentsRef, startTime, endTime) {
+  // Check if the event is overlapped with other events.
+  // const startTimeObj = new Date(startTime);
+  // const endTimeObj = new Date(endTime);
+  let returnVal = [false, ""];
+  appointmentsRef.once("value", (snapshot) => {
+    const data = snapshot.val();
+    for (let event in data) {
+      // const eventStartTime = new Date(data[event].startTime);
+      const eventEndTime = new Date(data[event].endTime);
+      console.log(eventEndTime);
+      if (startTime.getTime() <= eventEndTime.getTime()) {
+        returnVal = [true, eventEndTime];
+      }
+    }
+  });
+  return returnVal;
+}
+
+function getNearestHalfHourTime() {
+  let now = new Date();
+  now.setMinutes(Math.ceil(now.getMinutes() / 30) * 30);
+  return now;
+}
+export{startTimeString, endTimeString}
