@@ -19,12 +19,20 @@ window.onload = (event) => {
       document.querySelector("#user").innerText =
         user.displayName || "Anonymous";
       googleUser = user;
+      
+      if (googleUser.email == "admin@cssiark.com") {
+        isAdmin(); 
+      }      
+
       setRoomInfo();
+
     } else {
       // If not logged in, navigate back to login page.
       window.location = "index.html";
     }
   });
+
+  updateRoomOptions(); 
 };
 
 function toggleBookModal() {
@@ -78,6 +86,20 @@ function checkCollaboratorEmpty() {
   }
 }
 
+function updateRoomOptions() {
+    const optionContainer = document.querySelector('#options-container');     
+
+    firebase.database().ref(`rooms/`).on('value', (snapshot) => {
+        const data = snapshot.val();
+        optionContainer.innerHTML = ``; 
+
+        for (dataIndex in data) {
+            option = document.createElement("option"); 
+            option.innerHTML = dataIndex
+            optionContainer.appendChild(option); 
+        }
+    });
+}
 function resetBookModal() {
   collaboratorContainer.innerHTML = `<p class="no-friends" id="no-friends">Currently no one invited</p>`;
   collaboratorInput.value = "";
@@ -152,6 +174,16 @@ function logOut() {
     .catch((err) => {
       createAlert(err.message, "danger");
     });
+}
+
+function isAdmin() {
+    const navBar = document.querySelector("#navbar-end"); 
+
+    adminMenu = document.createElement("a");
+    adminMenu.classList.add("navbar-item"); 
+    adminMenu.innerHTML = "Admin Menu"
+    adminMenu.setAttribute("href", "admin.html")
+    navBar.prepend(adminMenu)
 }
 
 function addAppointment(roomId, startTime, endTime) {
