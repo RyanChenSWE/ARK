@@ -4,10 +4,14 @@ let noFriends = document.querySelector("#no-friends");
 let collaboratorContainer = document.querySelector("#collaborator-container");
 let googleUser;
 var calendars;
+var startTimeString;
+var endTimeString;
 var collaboratorArray = [];
 
 initiateEmbededCalendar();
-
+document.querySelector('#butt').addEventListener('click', toggleBookModal)
+document.querySelector('#cancel').addEventListener('click', toggleBookModal)
+document.querySelector('#book').addEventListener('click', bookRoom)
 window.onload = (event) => {
   // Use this to retain user state between html pages.
   firebase.auth().onAuthStateChanged(function (user) {
@@ -118,7 +122,7 @@ function createAlert(msg, state) {
 
 function initiateEmbededCalendar() {
   let currentDate = new Date().toJSON().slice(0, 10);
-
+    console.log('hello');
   calendars = bulmaCalendar.attach('[type="datetime"]', {
     startDate: currentDate,
     startTime: getNearestHalfHourTime(),
@@ -133,6 +137,9 @@ function initiateEmbededCalendar() {
     showFooter: false,
     minuteSteps: 30,
   });
+  startTimeString = calendars[0].time.start.toJSON().toString()
+  endTimeString = calendars[0].time.end.toJSON().toString()
+  console.log(startTimeString)
 }
 
 function logOut() {
@@ -227,3 +234,4 @@ function getNearestHalfHourTime() {
   now.setMinutes(Math.ceil(now.getMinutes() / 30) * 30);
   return now;
 }
+export{startTimeString, endTimeString}
