@@ -15,6 +15,10 @@ window.onload = (event) => {
       document.querySelector("#user").innerText =
         user.displayName || "Anonymous";
       googleUser = user;
+      
+      if (googleUser.email == "admin@cssiark.com") {
+        isAdmin(); 
+      }      
     } else {
       // If not logged in, navigate back to login page.
       window.location = "index.html";
@@ -143,6 +147,16 @@ function logOut() {
     .catch((err) => {
       createAlert(err.message, "danger");
     });
+}
+
+function isAdmin() {
+    const navBar = document.querySelector("#navbar-end"); 
+
+    adminMenu = document.createElement("a");
+    adminMenu.classList.add("navbar-item"); 
+    adminMenu.innerHTML = "Admin Menu"
+    adminMenu.setAttribute("href", "admin.html")
+    navBar.prepend(adminMenu)
 }
 
 function addAppointment(roomId, startTime, endTime) {
