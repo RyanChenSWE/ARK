@@ -6,10 +6,9 @@
 }
 
 body {
-  background: linear-gradient(
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.5)
-    ), url('https://source.unsplash.com/random/1600x900?building') no-repeat center center fixed;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("https://source.unsplash.com/random/1600x900?building") no-repeat center
+      center fixed;
   background-size: cover;
   height: 100vh;
   color: white;
@@ -22,7 +21,7 @@ body {
 
 .register {
   margin-top: 10rem;
-  background-color: rgba(0,0,0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
 }
 
@@ -86,4 +85,11 @@ input:focus {
 .va {
   display: flex;
   align-items: center;
+}
+
+.notification-container {
+  position: fixed;
+  width: 100%;
+  /* To get above navbar */
+  z-index: 99;
 }

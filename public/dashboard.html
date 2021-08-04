@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Book a Room</title>
 
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+    <link href="css/bulma-calendar.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/dashboard.css" />
     <style type="text/css">
 
@@ -18,86 +20,136 @@
     <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-    <script src="js/signIn.js"></script>
-  </head>
-  <body>
+</head>
+
+<body class="has-background-light">
+    <div class="notification-container"></div>
     <div class="header-container">
-
-    </div>
-    <div class="body-container">
-      <div class="button-container">
-        <button class="button book-button" onclick="toggleBookModal()">
-          Book
-        </button>
-      </div>
-      <div class="calendar-container">
-          <!-- Calendar Here? -->
-    </div>
-    <div>
-        <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=America%2FLos_Angeles&amp;src=YTI1cDljOWU4MXV1bWJqdGQwN3EzOXJudXNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;color=%23D50000" style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-    </div>
-
-<div id="bookModal" class="modal">
-    <div class="modal-background"></div> <!-- Makes the background dark-->
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <div class="booking-title">
-                <h1>Book a Room</h1>
+        <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
             </div>
-        </header>
-        <div class="modal-card-body">
-            <div class="modal-section-container">
-                <div class="modal-left">
-                    <label class="label">Select a Room</label>
-                    <div class="control">
-                        <div class="select">
-                            <select>
-                            <option>Room 242</option>
-                            <option>Room 452</option>
-                            </select>
+
+            <div id="navMenu" class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item">
+                        Home
+                    </a>
+
+                    <a class="navbar-item">
+                        Locations
+                    </a>
+                </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a href="#" class="navbar-link" id="user"></a>
+                        <div class="navbar-dropdown">
+                            <a href="#" class="navbar-item">My Appointments</a>
+                            <hr class="navbar-divider">
+                            <a onclick="logOut()" class="navbar-item">Log out</a>
+                        </div>
+                    </div>
+                    <div id="user" class="navbar-item">
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="body-container container mt-5">
+        <div class="button-container">
+            <button class="button book-button is-info" onclick="toggleBookModal()">
+                <span class="icon">
+                    <i class="fas fa-calendar-check"></i>
+                </span>
+                <span>Book</span>
+            </button>
+        </div>
+        <div class="calendar-container">
+            <iframe id="calendar" src="" style="border:solid 1px #777" width="800" height="600" frameborder="0"
+                scrolling="no"></iframe>
+        </div>
+    </div>
+
+    <div id="bookModal" class="modal">
+        <div class="modal-background"></div> <!-- Makes the background dark-->
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <div class="booking-title">
+                    <h1>Book a Room</h1>
+                </div>
+            </header>
+            <div class="modal-card-body">
+                <div class="modal-section-container">
+                    <div class="modal-left">
+                        <label class="label">Select a Room</label>
+                        <div class="control">
+                            <div class="select">
+                                <select>
+                                    <option>242</option>
+                                    <option>452</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <span class="spacer"></span>
+
+                        <label class="label">Invite Collaborators</label>
+                        <div class="control">
+                            <input class="input is-normal" id="addCollaborators" placeholder="Invite by Email"
+                                type="text">
+                            <p class="email-error" id="email-error">Valid Email Address Required</p>
+                        </div>
+
+                        <span class="spacer"></span>
+
+                        <label class="label">Invited:</label>
+                        <div id="collaborator-container" class="collaborator-container">
+                            <p class="no-friends" id="no-friends">Currently no one invited</p>
                         </div>
                     </div>
 
                     <span class="spacer"></span>
 
-                    <label class="label">Invite Collaborators</label>
-                    <div class="control">
-                        <input class="input is-normal" id="addCollaborators" placeholder="Invite by Email" type="text">
-                        <p class="email-error" id="email-error">Valid Email Address Required</p>
-                    </div>
+                    <div class="modal-right">
+                        <label class="label">Date and Time Selector</label>
+                        <input id="embeded-calendar" type="datetime">
 
-                    <span class="spacer"></span>
-
-                    <label class="label">Invited:</label>
-                    <div id="collaborator-container" class="collaborator-container">
-                        <p class="no-friends" id="no-friends">Currently no one invited</p>
+                        <div class="book-button-container">
+                            <button class="button is-danger is-light" onclick="toggleBookModal()">Cancel</button>
+                            <span class="spacer"></span>
+                            <button class="button is-success is-light" onclick="bookRoom()">Book</button>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-right">
-                    <div class="square"></div>
-
-                    <div class="book-button-container">
-                        <button class="button is-danger is-light" onclick="toggleBookModal()">Cancel</button>
-                        <span class="spacer"></span>
-                        <button class="button is-success is-light" onclick="toggleBookModal()">Book</button>
-                    </div>
-
-
-                </div>
             </div>
-            </div>
+
             <footer class="modal-card-foot">
                 <div class="regulations">
                     <label class="label">COVID-19 Regulations</label>
                     <p>What do I even write here? Lorem Ipsum.</p>
                 </div>
-                
             </footer>
         </div>
     </div>
-</div>
+    </div>
 
-  </body>
+</body>
 
-    <script src="js/dashboard.js"></script>
+<script src="js/bulma-calendar.min.js"></script>
+<script src="js/dashboard.js"></script>
+<script>
+    // Initialize google calendar according to user's timezone
+    // From https://stackoverflow.com/questions/9772955/how-can-i-get-the-timezone-name-in-javascript
+    const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const toURL = encodeURIComponent(userTZ)
+    const calendarSrc = `https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=${toURL}&amp;src=YTI1cDljOWU4MXV1bWJqdGQwN3EzOXJudXNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;color=%23D50000`
+    document.querySelector('iframe#calendar').setAttribute('src', calendarSrc)
+</script>
+
 </html>
