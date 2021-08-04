@@ -12,8 +12,7 @@ window.onload = (event) => {
   // Use this to retain user state between html pages.
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      document.querySelector("#user").innerText =
-        user.displayName || "Anonymous";
+      document.querySelector("#user").innerText = user.displayName || "Anonymous";
       googleUser = user;
       setRoomInfo();
     } else {
@@ -154,15 +153,14 @@ function addAppointment(roomId, startTime, endTime) {
     guests = "None";
   }
 
-  const appointmentsRef = firebase
-    .database()
-    .ref(`rooms/${roomId}/appointments`);
+  const appointmentsRef = firebase.database().ref(`rooms/${roomId}/appointments`);
 
   const resp = isOverlapped(appointmentsRef, startTime, endTime);
+
   if (!resp[0]) {
     appointmentsRef
       .push({
-        name: googleUser.displayName || "Annonymous",
+        name: googleUser.uid,
         guests,
         startTime: startTime.toJSON(),
         endTime: endTime.toJSON(),
@@ -173,9 +171,9 @@ function addAppointment(roomId, startTime, endTime) {
       });
   } else {
     createAlert(
-      `Your appointment is conflicting with another event ends at <b>${moment(
-        resp[1]
-      ).format("MMMM Do YYYY, h:mm a")}</b>.`,
+      `Your appointment is conflicting with another event ends at <b>${moment(resp[1]).format(
+        "MMMM Do YYYY, h:mm a"
+      )}</b>.`,
       "warning"
     );
   }
@@ -193,9 +191,7 @@ function setRoomInfo() {
   const roomId = selectEl.options[selectEl.selectedIndex].value;
   // Add short summary retrieved from firebase to book modal.
   const roomRef = firebase.database().ref(`rooms/${roomId}`);
-  const summaryEl = document
-    .querySelector("#bookModal")
-    .querySelector(".regulations");
+  const summaryEl = document.querySelector("#bookModal").querySelector(".regulations");
   roomRef.on("value", (snapshot) => {
     const data = snapshot.val();
     summaryEl.querySelector("label").innerText = data.location;
@@ -213,7 +209,6 @@ function isOverlapped(appointmentsRef, startTime, endTime) {
     for (let event in data) {
       // const eventStartTime = new Date(data[event].startTime);
       const eventEndTime = new Date(data[event].endTime);
-      console.log(eventEndTime);
       if (startTime.getTime() <= eventEndTime.getTime()) {
         returnVal = [true, eventEndTime];
       }
