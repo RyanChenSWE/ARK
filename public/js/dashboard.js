@@ -24,7 +24,7 @@ window.onload = (event) => {
         isAdmin(); 
       }      
 
-      setRoomInfo();
+    // setRoomInfo();
 
     } else {
       // If not logged in, navigate back to login page.
@@ -93,8 +93,8 @@ function updateRoomOptions() {
         const data = snapshot.val();
         optionContainer.innerHTML = ``; 
 
-        for (dataIndex in data) {
-            option = document.createElement("option"); 
+        for (let dataIndex in data) {
+            let option = document.createElement("option"); 
             option.innerHTML = dataIndex
             optionContainer.appendChild(option); 
         }
@@ -179,7 +179,7 @@ function logOut() {
 function isAdmin() {
     const navBar = document.querySelector("#navbar-end"); 
 
-    adminMenu = document.createElement("a");
+    let adminMenu = document.createElement("a");
     adminMenu.classList.add("navbar-item"); 
     adminMenu.innerHTML = "Admin Menu"
     adminMenu.setAttribute("href", "admin.html")
