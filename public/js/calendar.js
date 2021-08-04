@@ -1,7 +1,24 @@
-var clientId = 'YOUR_CLIENT_ID';
-var apiKey = 'YOUR_API_KEY';
-var scopes = 'https://www.googleapis.com/auth/calendar';
+import{startTimeString, endTimeString} from '/js/dashboard.js'
 
+var clientId = '522733656862-0tpvusruk1vic3atfj9o7da7kduisjg9.apps.googleusercontent.com';
+var apiKey = 'AIzaSyAWfyd2stNVDx89KDE001VbHjW5e2CrJQA';
+var scopes = 'https://www.googleapis.com/auth/calendar';
+var calendars;
+
+//var startTime = calendars[0].time.start.toJSON().toString()
+//var endTime = calendars[0].time.end.toJSON().toString()
+document.querySelector('#book').addEventListener('click', handleAuthClick)
+var resource = {
+  "location": "Room 242",
+  "start": {
+    "dateTime": startTimeString
+  },
+  "end": {
+    "dateTime": endTimeString
+  }
+};
+
+console.log(startTimeString )
 function handleClientLoad() {
   gapi.client.setApiKey(apiKey);
   window.setTimeout(checkAuth,1);
@@ -33,11 +50,13 @@ function handleAuthClick(event) {
 
 function makeApiCall() {
   gapi.client.load('calendar', 'v3', function() {
-    var request = gapi.client.calendar.events.list({
-      'calendarId': 'a25p9c9e81uumbjtd07q39rnus@group.calendar.google.com'
+    var request = gapi.client.calendar.events.insert({
+      'calendarId': 'a25p9c9e81uumbjtd07q39rnus@group.calendar.google.com',
+      'resource': resource
     });
           
     request.execute(function(resp) {
+        console.log(resp);
     });
   });
 }
