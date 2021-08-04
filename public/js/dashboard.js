@@ -15,6 +15,7 @@ window.onload = (event) => {
       document.querySelector("#user").innerText =
         user.displayName || "Anonymous";
       googleUser = user;
+      setRoomInfo();
     } else {
       // If not logged in, navigate back to login page.
       window.location = "index.html";
@@ -164,4 +165,27 @@ function addAppointment(roomId, startTime, endTime) {
     .then((data) => {
       console.log(data);
     });
+}
+
+document
+  .querySelector("#bookModal")
+  .querySelector("select")
+  .addEventListener("change", (e) => {
+    setRoomInfo();
+  });
+
+function setRoomInfo() {
+  const selectEl = document.querySelector("#bookModal").querySelector("select");
+  const roomId = selectEl.options[selectEl.selectedIndex].value;
+  // Add short summary retrieved from firebase to book modal.
+  const roomRef = firebase.database().ref(`rooms/${roomId}`);
+  const summaryEl = document
+    .querySelector("#bookModal")
+    .querySelector(".regulations");
+  roomRef.on("value", (snapshot) => {
+    const data = snapshot.val();
+    console.log(data);
+    summaryEl.querySelector("label").innerText = data.location;
+    summaryEl.querySelector("p").innerText = "Capacity: " + data.capacity;
+  });
 }
