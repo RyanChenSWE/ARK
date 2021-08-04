@@ -110,7 +110,7 @@ function createAlert(msg, state) {
   });
   const alertText = document.createElement("p");
   alertText.className = "subtitle";
-  alertText.innerText = msg;
+  alertText.innerHTML = msg;
   alertDiv.appendChild(alertBtn);
   alertDiv.appendChild(alertText);
   document.querySelector(".notification-container").appendChild(alertDiv);
@@ -158,7 +158,8 @@ function addAppointment(roomId, startTime, endTime) {
     .database()
     .ref(`rooms/${roomId}/appointments`);
 
-  if (!isOverlapped(appointmentsRef, startTime, endTime)) {
+  const resp = isOverlapped(appointmentsRef, startTime, endTime);
+  if (!resp[0]) {
     appointmentsRef
       .push({
         name: googleUser.displayName || "Annonymous",
@@ -172,7 +173,9 @@ function addAppointment(roomId, startTime, endTime) {
       });
   } else {
     createAlert(
-      "Your appointment is conflicting with other event. Please book another time",
+      `Your appointment is conflicting with another event ends at <b>${moment(
+        resp[1]
+      ).format("MMMM Do YYYY, h:mm a")}</b>.`,
       "warning"
     );
   }
@@ -204,15 +207,15 @@ function isOverlapped(appointmentsRef, startTime, endTime) {
   // Check if the event is overlapped with other events.
   // const startTimeObj = new Date(startTime);
   // const endTimeObj = new Date(endTime);
-  let returnVal = false; // have to use this variable
+  let returnVal = [false, ""];
   appointmentsRef.once("value", (snapshot) => {
     const data = snapshot.val();
     for (let event in data) {
       // const eventStartTime = new Date(data[event].startTime);
       const eventEndTime = new Date(data[event].endTime);
+      console.log(eventEndTime);
       if (startTime.getTime() <= eventEndTime.getTime()) {
-        console.log("Event is overlapping with another event!");
-        returnVal = true; // have to use this method bc returning true here doesn't work.
+        returnVal = [true, eventEndTime];
       }
     }
   });
