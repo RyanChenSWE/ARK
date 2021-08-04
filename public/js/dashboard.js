@@ -9,9 +9,10 @@ var endTimeString;
 var collaboratorArray = [];
 
 initiateEmbededCalendar();
-document.querySelector('#butt').addEventListener('click', toggleBookModal)
-document.querySelector('#cancel').addEventListener('click', toggleBookModal)
-document.querySelector('#book').addEventListener('click', bookRoom)
+document.querySelector("#butt").addEventListener("click", toggleBookModal);
+document.querySelector("#cancel").addEventListener("click", toggleBookModal);
+document.querySelector("#book").addEventListener("click", bookRoom);
+document.querySelector("#logOut").addEventListener("click", logOut);
 window.onload = (event) => {
   // Use this to retain user state between html pages.
   firebase.auth().onAuthStateChanged(function (user) {
@@ -122,7 +123,7 @@ function createAlert(msg, state) {
 
 function initiateEmbededCalendar() {
   let currentDate = new Date().toJSON().slice(0, 10);
-    console.log('hello');
+  console.log("hello");
   calendars = bulmaCalendar.attach('[type="datetime"]', {
     startDate: currentDate,
     minDate: currentDate,
@@ -135,9 +136,9 @@ function initiateEmbededCalendar() {
     showFooter: false,
     minuteSteps: 30,
   });
-  startTimeString = calendars[0].time.start.toJSON().toString()
-  endTimeString = calendars[0].time.end.toJSON().toString()
-  console.log(startTimeString)
+  startTimeString = calendars[0].time.start.toJSON().toString();
+  endTimeString = calendars[0].time.end.toJSON().toString();
+  console.log(startTimeString);
 }
 
 function logOut() {
@@ -172,4 +173,4 @@ function addAppointment(roomId, startTime, endTime) {
       console.log(data);
     });
 }
-export{startTimeString, endTimeString}
+export { startTimeString, endTimeString };
