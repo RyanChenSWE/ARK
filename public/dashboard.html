@@ -123,7 +123,7 @@
                         <div class="book-button-container">
                             <button class="button is-danger is-light" onclick="toggleBookModal()">Cancel</button>
                             <span class="spacer"></span>
-                            <button class="button is-success is-light" onclick="bookRoom()">Book</button>
+                            <button class="button is-success is-light" id="book" onclick="bookRoom()">Book</button>
                         </div>
                     </div>
                 </div>
@@ -143,6 +143,8 @@
 
 <script src="js/bulma-calendar.min.js"></script>
 <script src="js/dashboard.js"></script>
+<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+<script src="js/calendar.js"></script>
 <script>
     // Initialize google calendar according to user's timezone
     // From https://stackoverflow.com/questions/9772955/how-can-i-get-the-timezone-name-in-javascript
