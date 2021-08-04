@@ -29,7 +29,6 @@ function toggleBookModal() {
 }
 
 function bookRoom() {
-  bookModal.classList.toggle("is-active");
   const roomEl = bookModal.querySelector("select");
   const roomId = roomEl.options[roomEl.selectedIndex].value;
   addAppointment(
@@ -37,7 +36,6 @@ function bookRoom() {
     calendars[0].time.start.toJSON(),
     calendars[0].time.end.toJSON()
   );
-  createAlert(`Room ${roomId} booked!`, "success");
 }
 
 function validateEmail(email) {
@@ -153,18 +151,28 @@ function addAppointment(roomId, startTime, endTime) {
     guests = "None";
   }
 
-  firebase
+  const appointmentsRef = firebase
     .database()
-    .ref(`rooms/${roomId}/appointments`)
-    .push({
-      name: googleUser.displayName || "Anonymous",
-      guests,
-      startTime,
-      endTime,
-    })
-    .then((data) => {
-      console.log(data);
-    });
+    .ref(`rooms/${roomId}/appointments`);
+
+  if (!isOverlapped(appointmentsRef, startTime, endTime)) {
+    appointmentsRef
+      .push({
+        name: googleUser.displayName || "Annonymous",
+        guests,
+        startTime,
+        endTime,
+      })
+      .then(() => {
+        bookModal.classList.toggle("is-active");
+        createAlert(`Room ${roomId} booked!`, "success");
+      });
+  } else {
+    createAlert(
+      "Your appointment is conflicting with other event. Please book another time",
+      "warning"
+    );
+  }
 }
 
 document
@@ -184,8 +192,26 @@ function setRoomInfo() {
     .querySelector(".regulations");
   roomRef.on("value", (snapshot) => {
     const data = snapshot.val();
-    console.log(data);
     summaryEl.querySelector("label").innerText = data.location;
     summaryEl.querySelector("p").innerText = "Capacity: " + data.capacity;
   });
+}
+
+function isOverlapped(appointmentsRef, startTime, endTime) {
+  // Check if the event is overlapped with other events.
+  const startTimeObj = new Date(startTime);
+  // const endTimeObj = new Date(endTime);
+  let returnVal = false; // have to use this variable
+  appointmentsRef.once("value", (snapshot) => {
+    const data = snapshot.val();
+    for (let event in data) {
+      // const eventStartTime = new Date(data[event].startTime);
+      const eventEndTime = new Date(data[event].endTime);
+      if (startTimeObj.getTime() <= eventEndTime.getTime()) {
+        console.log("Event is overlapping with another event!");
+        returnVal = true; // have to use this method bc returning true here doesn't work.
+      }
+    }
+  });
+  return returnVal;
 }
