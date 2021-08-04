@@ -31,11 +31,12 @@ function toggleBookModal() {
 function bookRoom() {
   const roomEl = bookModal.querySelector("select");
   const roomId = roomEl.options[roomEl.selectedIndex].value;
-  addAppointment(
-    roomId,
-    calendars[0].time.start.toJSON(),
-    calendars[0].time.end.toJSON()
-  );
+  let startTime = calendars[0].time.start;
+  let endTime = calendars[0].time.end;
+
+  startTime.setDate(calendars[0].date.start.getDate());
+  endTime.setDate(calendars[0].date.start.getDate());
+  addAppointment(roomId, startTime, endTime);
 }
 
 function validateEmail(email) {
@@ -120,6 +121,8 @@ function initiateEmbededCalendar() {
 
   calendars = bulmaCalendar.attach('[type="datetime"]', {
     startDate: currentDate,
+    startTime: getNearestHalfHourTime(),
+    endTime: getNearestHalfHourTime(),
     minDate: currentDate,
     displayMode: "inline",
     color: "info",
@@ -160,8 +163,8 @@ function addAppointment(roomId, startTime, endTime) {
       .push({
         name: googleUser.displayName || "Annonymous",
         guests,
-        startTime,
-        endTime,
+        startTime: startTime.toJSON(),
+        endTime: endTime.toJSON(),
       })
       .then(() => {
         bookModal.classList.toggle("is-active");
@@ -199,7 +202,7 @@ function setRoomInfo() {
 
 function isOverlapped(appointmentsRef, startTime, endTime) {
   // Check if the event is overlapped with other events.
-  const startTimeObj = new Date(startTime);
+  // const startTimeObj = new Date(startTime);
   // const endTimeObj = new Date(endTime);
   let returnVal = false; // have to use this variable
   appointmentsRef.once("value", (snapshot) => {
@@ -207,11 +210,17 @@ function isOverlapped(appointmentsRef, startTime, endTime) {
     for (let event in data) {
       // const eventStartTime = new Date(data[event].startTime);
       const eventEndTime = new Date(data[event].endTime);
-      if (startTimeObj.getTime() <= eventEndTime.getTime()) {
+      if (startTime.getTime() <= eventEndTime.getTime()) {
         console.log("Event is overlapping with another event!");
         returnVal = true; // have to use this method bc returning true here doesn't work.
       }
     }
   });
   return returnVal;
+}
+
+function getNearestHalfHourTime() {
+  let now = new Date();
+  now.setMinutes(Math.ceil(now.getMinutes() / 30) * 30);
+  return now;
 }
