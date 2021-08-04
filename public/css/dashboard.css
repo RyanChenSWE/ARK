@@ -80,17 +80,17 @@ h1 {
 }
 
 .collaborator-email:hover {
-    text-decoration: line-through;
+  text-decoration: line-through;
 }
 
 .avaliable-times-container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .notification-container {
   position: fixed;
   width: 100%;
-  /* To get above navbar */
-  z-index: 40;
+  /* To get above everything */
+  z-index: 99;
 }
