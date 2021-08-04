@@ -24,6 +24,8 @@ window.onload = (event) => {
       window.location = "index.html";
     }
   });
+
+  updateRoomOptions(); 
 };
 
 function toggleBookModal() {
@@ -78,6 +80,20 @@ function checkCollaboratorEmpty() {
   }
 }
 
+function updateRoomOptions() {
+    const optionContainer = document.querySelector('#options-container');     
+
+    firebase.database().ref(`rooms/`).on('value', (snapshot) => {
+        const data = snapshot.val();
+        optionContainer.innerHTML = ``; 
+
+        for (dataIndex in data) {
+            option = document.createElement("option"); 
+            option.innerHTML = dataIndex
+            optionContainer.appendChild(option); 
+        }
+    });
+}
 function resetBookModal() {
   collaboratorContainer.innerHTML = `<p class="no-friends" id="no-friends">Currently no one invited</p>`;
   collaboratorInput.value = "";
