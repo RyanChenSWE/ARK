@@ -99,3 +99,17 @@ function updateRoomHTML() {
       currentroomHTML.innerHTML = finalHTML;
     });
 }
+
+function logOut() {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      window.location = "index.html";
+    })
+    .catch((err) => {
+      createAlert(err.message, "danger");
+    });
+}
+
+
