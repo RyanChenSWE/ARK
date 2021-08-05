@@ -12,6 +12,12 @@ var collaboratorArray = [];
 initiateEmbededCalendar();
 
 document.querySelector("#myAppointments").addEventListener("click", openMyAppointments);
+document
+  .querySelector("#appointmentsModal")
+  .querySelector("button")
+  .addEventListener("click", () => {
+    toggleAppointmentsModal();
+  });
 document.querySelector("#butt").addEventListener("click", toggleBookModal);
 document.querySelector("#cancel").addEventListener("click", toggleBookModal);
 document.querySelector("#book").addEventListener("click", bookRoom);
@@ -148,7 +154,6 @@ function createAlert(msg, state) {
 
 function initiateEmbededCalendar() {
   let currentDate = new Date().toJSON().slice(0, 10);
-  console.log("hello");
   calendars = bulmaCalendar.attach('[type="datetime"]', {
     startDate: currentDate,
     startTime: getNearestHalfHourTime(),
@@ -165,7 +170,7 @@ function initiateEmbededCalendar() {
   });
   startTimeString = calendars[0].time.start.toJSON().toString();
   endTimeString = calendars[0].time.end.toJSON().toString();
-  console.log(startTimeString);
+  // console.log(startTimeString);
 }
 
 function logOut() {
@@ -369,7 +374,7 @@ function addGuests(guests) {
   const dropdownMenuContent = document.createElement("div");
   dropdownMenuContent.className = "dropdown-content";
 
-  if (guests) {
+  if (guests !== "None") {
     guests.forEach((guest) => {
       const dropdownItem = document.createElement("a");
       dropdownItem.className = "dropdown-item";
