@@ -1,6 +1,7 @@
 html,
 body {
   font-family: "Open Sans";
+  height: 100%;
 }
 
 img {
@@ -97,4 +98,15 @@ h1 {
 
 .accordions .accordion .accordion-header + .accordion-body {
   overflow: auto;
+}
+
+.sticky-footer {
+  bottom: 0;
+  left: 0;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  position: fixed;
+  /* text-align: left; */
+  width: 100%;
+  padding: 50px;
 }
