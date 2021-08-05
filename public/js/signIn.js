@@ -39,12 +39,8 @@ const signInWithGoogle = () => {
 };
 
 const signInWithEmail = () => {
-  const email = document
-    .querySelector("#loginModal")
-    .querySelector('input[type="email"]');
-  const password = document
-    .querySelector("#loginModal")
-    .querySelector('input[type="password"]');
+  const email = document.querySelector("#loginModal").querySelector('input[type="email"]');
+  const password = document.querySelector("#loginModal").querySelector('input[type="password"]');
 
   firebase
     .auth()
