@@ -3,10 +3,12 @@ const emailError = document.querySelector("#email-error");
 let noFriends = document.querySelector("#no-friends");
 let collaboratorContainer = document.querySelector("#collaborator-container");
 let googleUser;
+let accordions;
 var calendars;
 var collaboratorArray = [];
 
 initiateEmbededCalendar();
+document.querySelector("#myAppointments").addEventListener("click", openMyAppointments);
 
 window.onload = (event) => {
   // Use this to retain user state between html pages.
@@ -221,4 +223,133 @@ function getNearestHalfHourTime() {
   let now = new Date();
   now.setMinutes(Math.ceil(now.getMinutes() / 30) * 30);
   return now;
+}
+
+function openMyAppointments() {
+  const accordionsEl = document.querySelector("#appointmentsModal").querySelector(".accordions");
+
+  if (!accordionsEl.hasChildNodes()) {
+    firebase
+      .database()
+      .ref(`rooms`)
+      .once("value", (snapshot) => {
+        const data = snapshot.val();
+        for (let room in data) {
+          const allAppointments = data[room].appointments;
+          if (allAppointments) {
+            // Filter by name from https://stackoverflow.com/questions/37615086/how-to-filter-a-dictionary-by-value-in-javascript
+            const myAppointments = Object.fromEntries(
+              Object.entries(allAppointments).filter(([_, value]) => value.name == googleUser.uid)
+            );
+            for (const appointmentId in myAppointments) {
+              const appointment = myAppointments[appointmentId];
+              const item = _createAccordionItem(
+                room,
+                data[room].location,
+                data[room].capacity,
+                appointment.startTime,
+                appointment.endTime,
+                appointment.guests
+              );
+              accordionsEl.appendChild(item);
+            }
+          }
+        }
+      });
+
+    accordions = bulmaAccordion.attach(); // Initalize bulma Accordion
+  }
+  toggleAppointmentsModal();
+}
+
+function _createAccordionItem(roomId, location, capacity, startTime, endTime, guests) {
+  const parentEl = document.createElement("article");
+  parentEl.className = "accordion";
+
+  const header = document.createElement("div");
+  header.className = "accordion-header toggle";
+  const headerText = document.createElement("p");
+  headerText.innerText = `${moment(startTime).format("MMMM Do, hh:mm A")} - ${moment(endTime).format(
+    "MMMM Do, hh:mm A"
+  )}`;
+  header.appendChild(headerText);
+
+  const body = document.createElement("div");
+  body.className = "accordion-body";
+  const bodyContent = document.createElement("div");
+  bodyContent.className = "accordion-content columns";
+  bodyContent.innerHTML = `
+    <div class="column">
+      <p>Room: ${roomId}</p>
+      <p>Location: ${location}</p>
+      <p>Capacity: ${capacity}</p>
+    </div>
+  `;
+  const guestsCol = document.createElement("div");
+  guestsCol.className = "column";
+  guestsCol.appendChild(addGuests(guests));
+  bodyContent.appendChild(guestsCol);
+  body.appendChild(bodyContent);
+
+  parentEl.appendChild(header);
+  parentEl.appendChild(body);
+
+  return parentEl;
+}
+
+function addGuests(guests) {
+  const dropdown = document.createElement("div");
+  dropdown.className = "dropdown";
+  // dropdown.innerHTML = `
+  //   <div class="dropdown-trigger">
+  //     <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+  //     </button>
+  //   </div>
+  // `;
+
+  const dropdownTrigger = document.createElement("div");
+  dropdownTrigger.className = "dropdown-trigger";
+  const triggerBtn = document.createElement("button");
+  triggerBtn.className = "button";
+  triggerBtn.setAttribute("aria-haspopup", "true");
+  triggerBtn.setAttribute("aria-controls", "dropdown-menu");
+  triggerBtn.innerHTML = `
+    <span>Guests</span>
+    <span class="icon is-small">
+      <i class="fas fa-angle-down" aria-hidden="true"></i>
+    </span>
+  `;
+  triggerBtn.addEventListener("click", (e) => {
+    // Go all the way up to <div class="dropdown">
+    e.target.parentNode.parentNode.parentNode.classList.toggle("is-active");
+  });
+  dropdownTrigger.appendChild(triggerBtn);
+
+  const dropdownMenu = document.createElement("div");
+  dropdownMenu.className = "dropdown-menu";
+  dropdownMenu.id = "dropdown-menu";
+  dropdownMenu.setAttribute("role", "menu");
+
+  const dropdownMenuContent = document.createElement("div");
+  dropdownMenuContent.className = "dropdown-content";
+
+  if (guests) {
+    guests.forEach((guest) => {
+      const dropdownItem = document.createElement("a");
+      dropdownItem.className = "dropdown-item";
+      dropdownItem.setAttribute("href", "#");
+      dropdownItem.innerText = guest;
+      dropdownMenuContent.appendChild(dropdownItem);
+    });
+  }
+
+  dropdownMenu.appendChild(dropdownMenuContent);
+  dropdown.appendChild(dropdownTrigger);
+  dropdown.appendChild(dropdownMenu);
+
+  return dropdown;
+}
+
+function toggleAppointmentsModal() {
+  document.querySelector("#appointmentsModal").classList.toggle("is-active");
 }
