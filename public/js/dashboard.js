@@ -21,6 +21,8 @@ document
 document.querySelector("#butt").addEventListener("click", toggleBookModal);
 document.querySelector("#cancel").addEventListener("click", toggleBookModal);
 document.querySelector("#book").addEventListener("click", bookRoom);
+document.querySelector("#logOut").addEventListener("click", logOut);
+
 window.onload = (event) => {
   // Use this to retain user state between html pages.
   firebase.auth().onAuthStateChanged(function (user) {
