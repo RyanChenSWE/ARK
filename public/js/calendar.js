@@ -10,7 +10,6 @@ var calendars;
 //var endTime = calendars[0].time.end.toJSON().toString()
 document.querySelector('#book').addEventListener('click', handleAuthClick)
 var resource;
-
 console.log(startTimeString);
 function handleClientLoad() {
   gapi.client.setApiKey(apiKey);
@@ -32,11 +31,13 @@ function handleAuthResult(authResult) {
 }
 
 function handleAuthClick(event) {
+  let title = document.querySelector('#appointment-name').value;
+  console.log(title);
   let startTime = getStartTime().toJSON().toString();
   let endTime = getEndTime().toJSON().toString();
   let roomId = getRoomId();
   resource =  {
-  "summary": "Appointment",
+  "summary": title,
   "location": roomId,
   "start": {
     "dateTime": startTime
