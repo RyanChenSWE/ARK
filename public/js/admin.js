@@ -1,76 +1,75 @@
-console.log("working")
-let currentroomHTML = document.querySelector('#white-box'); 
-
+console.log("working");
+let currentroomHTML = document.querySelector("#white-box");
 
 window.onload = (event) => {
-    document.querySelector("#user").innerText = "Admin"; 
-    updateRoomHTML(); 
+  document.querySelector("#user").innerText = "Admin";
+  updateRoomHTML();
 };
 
 function deleteRoom(element) {
-    firebase
+  firebase
     .database()
-    .ref(`rooms/${element.parentElement.firstElementChild.innerHTML }`)
+    .ref(`rooms/${element.parentElement.firstElementChild.innerHTML}`)
     .remove()
-    .then((data) => { 
+    .then((data) => {
       console.log(data);
     });
-    
-    element.parentElement.parentElement.parentElement.parentElement.remove(); 
-    
+
+  element.parentElement.parentElement.parentElement.parentElement.remove();
 }
 
 function addRoom() {
-    const roomName = document.querySelector('#roomName');
-    const roomLocation = document.querySelector('#roomLocation');
-    const roomCapacity = document.querySelector('#roomCapacity');
+  const roomName = document.querySelector("#roomName");
+  const roomLocation = document.querySelector("#roomLocation");
+  const roomCapacity = document.querySelector("#roomCapacity");
 
-    if (roomName.value == "") {
-        alert("Required!");
-        return 
-    }
+  if (roomName.value == "") {
+    alert("Required!");
+    return;
+  }
 
-    if (roomCapacity.value == "") {
-        roomCapacity.value = "None"
-    } else if (isNaN(roomCapacity.value)) {
-        alert("Capacity needs to be an integer!");
-        return
-    }
+  if (roomCapacity.value == "") {
+    roomCapacity.value = "None";
+  } else if (isNaN(roomCapacity.value)) {
+    alert("Capacity needs to be an integer!");
+    return;
+  }
 
-    if (roomLocation.value == "") {
-        roomLocation.value = "None"
-    }
+  if (roomLocation.value == "") {
+    roomLocation.value = "None";
+  }
 
-    addRoomDatabase(roomName.value, roomCapacity.value, roomLocation.value);
-    updateRoomHTML(); 
+  addRoomDatabase(roomName.value, roomCapacity.value, roomLocation.value);
+  updateRoomHTML();
 
-    roomName.value = ""; 
-    roomLocation.value = ""; 
-    roomCapacity.value = ""; 
-
-    
+  roomName.value = "";
+  roomLocation.value = "";
+  roomCapacity.value = "";
 }
 
 function addRoomDatabase(roomName, roomCapacity, roomLocation) {
-    firebase
+  firebase
     .database()
     .ref(`rooms/${roomName}`)
     .set({
-        "capacity" : roomCapacity,
-        "location" : roomLocation
+      capacity: roomCapacity,
+      location: roomLocation,
     })
-    .then((data) => { 
+    .then((data) => {
       console.log(data);
     });
 }
 
 function updateRoomHTML() {
-    firebase.database().ref(`rooms/`).on('value', (snapshot) => {
-        const data = snapshot.val();
-        let finalHTML = ``; 
+  firebase
+    .database()
+    .ref(`rooms/`)
+    .on("value", (snapshot) => {
+      const data = snapshot.val();
+      let finalHTML = ``;
 
-        for (dataIndex in data) {
-            let roomHTML = `
+      for (dataIndex in data) {
+        let roomHTML = `
                 <div class="dropdown is-hoverable room-label">
                     <div class="dropdown-trigger">
                         <button class="button">
@@ -93,15 +92,10 @@ function updateRoomHTML() {
                         </div>
                     </div>
                 </div>
-            `
-        
-            finalHTML += roomHTML;
-        }
-        currentroomHTML.innerHTML = finalHTML;
+            `;
+
+        finalHTML += roomHTML;
+      }
+      currentroomHTML.innerHTML = finalHTML;
     });
-    
 }
-
-
-
-
