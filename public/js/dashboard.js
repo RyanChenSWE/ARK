@@ -3,30 +3,45 @@ const emailError = document.querySelector("#email-error");
 let noFriends = document.querySelector("#no-friends");
 let collaboratorContainer = document.querySelector("#collaborator-container");
 let googleUser;
+let accordions;
 var calendars;
+var startTimeString;
+var endTimeString;
 var collaboratorArray = [];
 
 initiateEmbededCalendar();
+
+document.querySelector("#myAppointments").addEventListener("click", openMyAppointments);
+document
+  .querySelector("#appointmentsModal")
+  .querySelector("button")
+  .addEventListener("click", () => {
+    toggleAppointmentsModal();
+  });
+document.querySelector("#butt").addEventListener("click", toggleBookModal);
+document.querySelector("#cancel").addEventListener("click", toggleBookModal);
+document.querySelector("#book").addEventListener("click", bookRoom);
+document.querySelector("#logOut").addEventListener("click", logOut);
 
 window.onload = (event) => {
   // Use this to retain user state between html pages.
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      document.querySelector("#user").innerText =
-        user.displayName || "Anonymous";
+      document.querySelector("#user").innerText = user.displayName || "Anonymous";
       googleUser = user;
-      
+
       if (googleUser.email == "admin@cssiark.com") {
         document.querySelector("#user").innerText = "Admin";        
         isAdmin(); 
       }      
+
     } else {
       // If not logged in, navigate back to login page.
       window.location = "index.html";
     }
   });
 
-  updateRoomOptions(); 
+  updateRoomOptions();
 };
 
 function toggleBookModal() {
@@ -35,15 +50,14 @@ function toggleBookModal() {
 }
 
 function bookRoom() {
-  bookModal.classList.toggle("is-active");
   const roomEl = bookModal.querySelector("select");
   const roomId = roomEl.options[roomEl.selectedIndex].value;
-  addAppointment(
-    roomId,
-    calendars[0].time.start.toJSON(),
-    calendars[0].time.end.toJSON()
-  );
-  createAlert(`Room ${roomId} booked!`, "success");
+  let startTime = calendars[0].time.start;
+  let endTime = calendars[0].time.end;
+
+  startTime.setDate(calendars[0].date.start.getDate());
+  endTime.setDate(calendars[0].date.start.getDate());
+  addAppointment(roomId, startTime, endTime);
 }
 
 function validateEmail(email) {
@@ -82,17 +96,20 @@ function checkCollaboratorEmpty() {
 }
 
 function updateRoomOptions() {
-    const optionContainer = document.querySelector('#options-container');     
+  const optionContainer = document.querySelector("#options-container");
 
-    firebase.database().ref(`rooms/`).on('value', (snapshot) => {
-        const data = snapshot.val();
-        optionContainer.innerHTML = ``; 
+  firebase
+    .database()
+    .ref(`rooms/`)
+    .on("value", (snapshot) => {
+      const data = snapshot.val();
+      optionContainer.innerHTML = ``;
 
-        for (dataIndex in data) {
-            option = document.createElement("option"); 
-            option.innerHTML = dataIndex
-            optionContainer.appendChild(option); 
-        }
+      for (let dataIndex in data) {
+        let option = document.createElement("option");
+        option.innerHTML = dataIndex;
+        optionContainer.appendChild(option);
+      }
     });
 }
 function resetBookModal() {
@@ -131,7 +148,7 @@ function createAlert(msg, state) {
   });
   const alertText = document.createElement("p");
   alertText.className = "subtitle";
-  alertText.innerText = msg;
+  alertText.innerHTML = msg;
   alertDiv.appendChild(alertBtn);
   alertDiv.appendChild(alertText);
   document.querySelector(".notification-container").appendChild(alertDiv);
@@ -139,9 +156,10 @@ function createAlert(msg, state) {
 
 function initiateEmbededCalendar() {
   let currentDate = new Date().toJSON().slice(0, 10);
-
   calendars = bulmaCalendar.attach('[type="datetime"]', {
     startDate: currentDate,
+    startTime: getNearestHalfHourTime(),
+    endTime: getNearestHalfHourTime(),
     minDate: currentDate,
     displayMode: "inline",
     color: "info",
@@ -152,6 +170,9 @@ function initiateEmbededCalendar() {
     showFooter: false,
     minuteSteps: 30,
   });
+  startTimeString = calendars[0].time.start.toJSON().toString();
+  endTimeString = calendars[0].time.end.toJSON().toString();
+  // console.log(startTimeString);
 }
 
 function logOut() {
@@ -167,13 +188,13 @@ function logOut() {
 }
 
 function isAdmin() {
-    const navBar = document.querySelector("#navbar-end"); 
+  const navBar = document.querySelector("#navbar-end");
 
-    adminMenu = document.createElement("a");
-    adminMenu.classList.add("navbar-item"); 
-    adminMenu.innerHTML = "Admin Menu"
-    adminMenu.setAttribute("href", "admin.html")
-    navBar.prepend(adminMenu)
+  let adminMenu = document.createElement("a");
+  adminMenu.classList.add("navbar-item");
+  adminMenu.innerHTML = "Admin Menu";
+  adminMenu.setAttribute("href", "admin.html");
+  navBar.prepend(adminMenu);
 }
 
 function addAppointment(roomId, startTime, endTime) {
@@ -183,16 +204,198 @@ function addAppointment(roomId, startTime, endTime) {
     guests = "None";
   }
 
-  firebase
-    .database()
-    .ref(`rooms/${roomId}/appointments`)
-    .push({
-      name: googleUser.displayName || "Anonymous",
-      guests,
-      startTime,
-      endTime,
-    })
-    .then((data) => {
-      console.log(data);
-    });
+  const appointmentsRef = firebase.database().ref(`rooms/${roomId}/appointments`);
+
+  const resp = isOverlapped(appointmentsRef, startTime, endTime);
+
+  if (!resp[0]) {
+    appointmentsRef
+      .push({
+        name: googleUser.uid,
+        guests,
+        startTime: startTime.toJSON(),
+        endTime: endTime.toJSON(),
+      })
+      .then(() => {
+        bookModal.classList.toggle("is-active");
+        createAlert(`Room ${roomId} booked!`, "success");
+      });
+  } else {
+    createAlert(
+      `Your appointment is conflicting with another event ends at <b>${moment(resp[1]).format(
+        "MMMM Do YYYY, h:mm a"
+      )}</b>.`,
+      "warning"
+    );
+  }
 }
+
+document
+  .querySelector("#bookModal")
+  .querySelector("select")
+  .addEventListener("change", (e) => {
+    setRoomInfo();
+  });
+
+function setRoomInfo() {
+  const selectEl = document.querySelector("#bookModal").querySelector("select");
+  const roomId = selectEl.options[selectEl.selectedIndex].value;
+  // Add short summary retrieved from firebase to book modal.
+  const roomRef = firebase.database().ref(`rooms/${roomId}`);
+  const summaryEl = document.querySelector("#bookModal").querySelector(".regulations");
+  roomRef.on("value", (snapshot) => {
+    const data = snapshot.val();
+    summaryEl.querySelector("label").innerText = data.location;
+    summaryEl.querySelector("p").innerText = "Capacity: " + data.capacity;
+  });
+}
+
+function isOverlapped(appointmentsRef, startTime, endTime) {
+  // Check if the event is overlapped with other events.
+  // const startTimeObj = new Date(startTime);
+  // const endTimeObj = new Date(endTime);
+  let returnVal = [false, ""];
+  appointmentsRef.once("value", (snapshot) => {
+    const data = snapshot.val();
+    for (let event in data) {
+      // const eventStartTime = new Date(data[event].startTime);
+      const eventEndTime = new Date(data[event].endTime);
+      // Only check for overlapping if dates are the same.
+      if (startTime.getDate() == eventEndTime.getDate() && startTime.getTime() <= eventEndTime.getTime()) {
+        returnVal = [true, eventEndTime];
+      }
+    }
+  });
+  return returnVal;
+}
+
+function getNearestHalfHourTime() {
+  let now = new Date();
+  now.setMinutes(Math.ceil(now.getMinutes() / 30) * 30);
+  return now;
+}
+
+function openMyAppointments() {
+  const accordionsEl = document.querySelector("#appointmentsModal").querySelector(".accordions");
+
+  if (!accordionsEl.hasChildNodes()) {
+    firebase
+      .database()
+      .ref(`rooms`)
+      .once("value", (snapshot) => {
+        const data = snapshot.val();
+        for (let room in data) {
+          const allAppointments = data[room].appointments;
+          if (allAppointments) {
+            // Filter by name from https://stackoverflow.com/questions/37615086/how-to-filter-a-dictionary-by-value-in-javascript
+            const myAppointments = Object.fromEntries(
+              Object.entries(allAppointments).filter(([_, value]) => value.name == googleUser.uid)
+            );
+            for (const appointmentId in myAppointments) {
+              const appointment = myAppointments[appointmentId];
+              const item = _createAccordionItem(
+                room,
+                data[room].location,
+                data[room].capacity,
+                appointment.startTime,
+                appointment.endTime,
+                appointment.guests
+              );
+              accordionsEl.appendChild(item);
+            }
+          }
+        }
+      });
+
+    accordions = bulmaAccordion.attach(); // Initalize bulma Accordion
+  }
+  toggleAppointmentsModal();
+}
+
+function _createAccordionItem(roomId, location, capacity, startTime, endTime, guests) {
+  const parentEl = document.createElement("article");
+  parentEl.className = "accordion";
+
+  const header = document.createElement("div");
+  header.className = "accordion-header toggle";
+  const headerText = document.createElement("p");
+  headerText.innerText = `${moment(startTime).format("MMMM Do, hh:mm A")} - ${moment(endTime).format(
+    "MMMM Do, hh:mm A"
+  )}`;
+  header.appendChild(headerText);
+
+  const body = document.createElement("div");
+  body.className = "accordion-body";
+  const bodyContent = document.createElement("div");
+  bodyContent.className = "accordion-content columns";
+  bodyContent.innerHTML = `
+    <div class="column">
+      <p>Room: ${roomId}</p>
+      <p>Location: ${location}</p>
+      <p>Capacity: ${capacity}</p>
+    </div>
+  `;
+  const guestsCol = document.createElement("div");
+  guestsCol.className = "column";
+  guestsCol.appendChild(addGuests(guests));
+  bodyContent.appendChild(guestsCol);
+  body.appendChild(bodyContent);
+
+  parentEl.appendChild(header);
+  parentEl.appendChild(body);
+
+  return parentEl;
+}
+
+function addGuests(guests) {
+  const dropdown = document.createElement("div");
+  dropdown.className = "dropdown";
+
+  const dropdownTrigger = document.createElement("div");
+  dropdownTrigger.className = "dropdown-trigger";
+  const triggerBtn = document.createElement("button");
+  triggerBtn.className = "button";
+  triggerBtn.setAttribute("aria-haspopup", "true");
+  triggerBtn.setAttribute("aria-controls", "dropdown-menu");
+  triggerBtn.innerHTML = `
+    <span>Guests</span>
+    <span class="icon is-small">
+      <i class="fas fa-angle-down" aria-hidden="true"></i>
+    </span>
+  `;
+  triggerBtn.addEventListener("click", (e) => {
+    // Go all the way up to <div class="dropdown">
+    e.target.parentNode.parentNode.parentNode.classList.toggle("is-active");
+  });
+  dropdownTrigger.appendChild(triggerBtn);
+
+  const dropdownMenu = document.createElement("div");
+  dropdownMenu.className = "dropdown-menu";
+  dropdownMenu.id = "dropdown-menu";
+  dropdownMenu.setAttribute("role", "menu");
+
+  const dropdownMenuContent = document.createElement("div");
+  dropdownMenuContent.className = "dropdown-content";
+
+  if (guests !== "None") {
+    guests.forEach((guest) => {
+      const dropdownItem = document.createElement("a");
+      dropdownItem.className = "dropdown-item";
+      dropdownItem.setAttribute("href", "#");
+      dropdownItem.innerText = guest;
+      dropdownMenuContent.appendChild(dropdownItem);
+    });
+  }
+
+  dropdownMenu.appendChild(dropdownMenuContent);
+  dropdown.appendChild(dropdownTrigger);
+  dropdown.appendChild(dropdownMenu);
+
+  return dropdown;
+}
+
+function toggleAppointmentsModal() {
+  document.querySelector("#appointmentsModal").classList.toggle("is-active");
+}
+
+export { startTimeString, endTimeString };
