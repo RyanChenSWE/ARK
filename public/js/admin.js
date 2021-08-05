@@ -3,6 +3,7 @@ let currentroomHTML = document.querySelector('#white-box');
 
 
 window.onload = (event) => {
+    document.querySelector("#user").innerText = "Admin"; 
     updateRoomHTML(); 
 };
 

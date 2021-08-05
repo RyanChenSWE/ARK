@@ -1,6 +1,7 @@
 html,
 body {
   font-family: "Open Sans";
+  height: 100%; 
 }
 
 img {
@@ -93,4 +94,15 @@ h1 {
   width: 100%;
   /* To get above navbar */
   z-index: 40;
+}
+
+.sticky-footer {
+  bottom: 0;
+  left: 0;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  position: fixed;
+  /* text-align: left; */
+  width: 100%;
+  padding: 50px; 
 }
