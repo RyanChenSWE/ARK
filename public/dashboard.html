@@ -58,6 +58,7 @@
         </nav>
     </div>
 
+
     <div class="body-container container mt-5">
         <div class="button-container">
             <button class="button book-button is-info" id="butt">
@@ -67,9 +68,8 @@
                 <span>Book</span>
             </button>
         </div>
-        <div class="calendar-container">
-            <iframe id="calendar" src="" style="border:solid 1px #777" width="800" height="600" frameborder="0"
-                scrolling="no"></iframe>
+        <div id="calendardisplay">
+        <iframe src="https://calendar.google.com/calendar/embed?src=a25p9c9e81uumbjtd07q39rnus%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
         </div>
     </div>
 
@@ -162,13 +162,6 @@
 <script src="js/dashboard.js"></script>
 <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 <script type="module" src="js/calendar.js"></script>
-<script>
-    // Initialize google calendar according to user's timezone
-    // From https://stackoverflow.com/questions/9772955/how-can-i-get-the-timezone-name-in-javascript
-    const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone
-    const toURL = encodeURIComponent(userTZ)
-    const calendarSrc = `https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=${toURL}&amp;src=YTI1cDljOWU4MXV1bWJqdGQwN3EzOXJudXNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;color=%23D50000`
-    document.querySelector('iframe#calendar').setAttribute('src', calendarSrc)
-</script>
-
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.7/jstz.js"></script>
+<script src="js/calendardisplay.js"></script>
 </html>

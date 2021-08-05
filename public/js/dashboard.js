@@ -8,7 +8,9 @@ var calendars;
 var startTimeString;
 var endTimeString;
 var collaboratorArray = [];
-
+var startTime;
+var endTime;
+var roomId;
 initiateEmbededCalendar();
 
 document.querySelector("#myAppointments").addEventListener("click", openMyAppointments);
@@ -50,9 +52,10 @@ function toggleBookModal() {
 
 function bookRoom() {
   const roomEl = bookModal.querySelector("select");
-  const roomId = roomEl.options[roomEl.selectedIndex].value;
-  let startTime = calendars[0].time.start;
-  let endTime = calendars[0].time.end;
+  roomId = roomEl.options[roomEl.selectedIndex].value;
+  console.log(roomId);
+  startTime = calendars[0].time.start;
+  endTime = calendars[0].time.end;
 
   startTime.setDate(calendars[0].date.start.getDate());
   endTime.setDate(calendars[0].date.start.getDate());
@@ -396,5 +399,13 @@ function addGuests(guests) {
 function toggleAppointmentsModal() {
   document.querySelector("#appointmentsModal").classList.toggle("is-active");
 }
-
-export { startTimeString, endTimeString };
+function getStartTime(){
+    return startTime;
+}
+function getEndTime(){
+    return endTime;
+}
+function getRoomId(){
+    return roomId;
+}
+export { startTimeString, endTimeString, getEndTime, getStartTime, getRoomId };

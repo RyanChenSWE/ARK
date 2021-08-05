@@ -1,4 +1,5 @@
-import { startTimeString, endTimeString } from "/js/dashboard.js";
+import{startTimeString, endTimeString, getStartTime, getEndTime, getRoomId} from '/js/dashboard.js'
+
 
 var clientId = "522733656862-0tpvusruk1vic3atfj9o7da7kduisjg9.apps.googleusercontent.com";
 var apiKey = "AIzaSyAWfyd2stNVDx89KDE001VbHjW5e2CrJQA";
@@ -7,16 +8,8 @@ var calendars;
 
 //var startTime = calendars[0].time.start.toJSON().toString()
 //var endTime = calendars[0].time.end.toJSON().toString()
-document.querySelector("#book").addEventListener("click", handleAuthClick);
-var resource = {
-  location: "Room 242",
-  start: {
-    dateTime: startTimeString,
-  },
-  end: {
-    dateTime: endTimeString,
-  },
-};
+document.querySelector('#book').addEventListener('click', handleAuthClick)
+var resource;
 
 console.log(startTimeString);
 function handleClientLoad() {
@@ -39,7 +32,22 @@ function handleAuthResult(authResult) {
 }
 
 function handleAuthClick(event) {
-  gapi.auth.authorize({ client_id: clientId, scope: scopes, immediate: false }, handleAuthResult);
+  let startTime = getStartTime().toJSON().toString();
+  let endTime = getEndTime().toJSON().toString();
+  let roomId = getRoomId();
+  resource =  {
+  "summary": "Appointment",
+  "location": roomId,
+  "start": {
+    "dateTime": startTime
+  },
+  "end": {
+    "dateTime": endTime
+  }
+};
+  gapi.auth.authorize(
+      {client_id: clientId, scope: scopes, immediate: false},
+      handleAuthResult);
   return false;
 }
 
