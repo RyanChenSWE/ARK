@@ -260,7 +260,8 @@ function isOverlapped(appointmentsRef, startTime, endTime) {
     for (let event in data) {
       // const eventStartTime = new Date(data[event].startTime);
       const eventEndTime = new Date(data[event].endTime);
-      if (startTime.getTime() <= eventEndTime.getTime()) {
+      // Only check for overlapping if dates are the same.
+      if (startTime.getDate() == eventEndTime.getDate() && startTime.getTime() <= eventEndTime.getTime()) {
         returnVal = [true, eventEndTime];
       }
     }
