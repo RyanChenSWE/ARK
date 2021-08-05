@@ -94,3 +94,7 @@ h1 {
   /* To get above everything */
   z-index: 99;
 }
+
+.accordions .accordion .accordion-header + .accordion-body {
+  overflow: auto;
+}

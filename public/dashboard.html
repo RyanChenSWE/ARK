@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
     <link href="css/bulma-calendar.min.css" rel="stylesheet">
+    <link href="css/bulma-accordion.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/dashboard.css" />
     <style type="text/css">
 
@@ -49,7 +50,7 @@
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a href="#" class="navbar-link" id="user"></a>
                         <div class="navbar-dropdown">
-                            <a href="#" class="navbar-item">My Appointments</a>
+                            <a id="myAppointments" class="navbar-item">My Appointments</a>
                             <hr class="navbar-divider">
                             <a onclick="logOut()" class="navbar-item">Log out</a>
                         </div>
@@ -119,9 +120,9 @@
                         <input id="embeded-calendar" type="datetime">
 
                         <div class="book-button-container">
-                            <button class="button is-danger is-light" id="cancel"">Cancel</button>
-                            <span class="spacer"></span>
-                            <button class="button is-success is-light" id="book" >Book</button>
+                            <button class="button is-danger is-light" id="cancel">Cancel</button>
+                            <span class=" spacer"></span>
+                            <button class="button is-success is-light" id="book">Book</button>
                         </div>
                     </div>
                 </div>
@@ -135,11 +136,26 @@
             </footer>
         </div>
     </div>
+
+    <div id="appointmentsModal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">My Appointments</p>
+            </header>
+            <section class="modal-card-body">
+                <div class="accordions"></div>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button is-success">Close</button>
+            </footer>
+        </div>
     </div>
 
 </body>
 
 <script src="js/bulma-calendar.min.js"></script>
+<script src="js/bulma-accordion.min.js"></script>
 <script src="js/moment.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
