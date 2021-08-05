@@ -31,10 +31,9 @@ window.onload = (event) => {
       googleUser = user;
 
       if (googleUser.email == "admin@cssiark.com") {
+        document.querySelector("#user").innerText = "Admin";
         isAdmin();
       }
-
-      // setRoomInfo();
     } else {
       // If not logged in, navigate back to login page.
       window.location = "index.html";

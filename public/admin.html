@@ -61,39 +61,50 @@
         </nav>
     </div>
 
+    <div class="title admin-panel-title">
+        Hello Admin. Welcome to the Room Manager
+    </div>
+
     <div class="body-container container mt-5">
         <div class="avaliable-room-container">
             <label class="label">Current Rooms List</label>
-            
+
             <span class="spacer"></span>
             <div class="white-box" id="white-box"></div>
         </div>
-            
+
         <div class="add-room-container">
-            <label class="label">Add Rooms</label>
+            <label class="label add-room-label">Add Rooms</label>
             <span class="spacer"></span>
             <div class="white-box">
                 <p>Enter Room Information:</p>
                 <span class="spacer"></span>
                 <div class="control">
-                    <input class="input is-normal" id="roomName" placeholder="Room Name/Number"type="text">
+                    <input class="input is-normal" id="roomName" placeholder="Room Name/Number" type="text">
                 </div>
                 <span class="spacer"></span>
                 <div class="control">
-                    <input class="input is-normal" id="roomLocation" placeholder="Location"type="text">
+                    <input class="input is-normal" id="roomLocation" placeholder="Location" type="text">
                 </div>
                 <span class="spacer"></span>
                 <div class="control">
-                    <input class="input is-normal" id="roomCapacity" placeholder="Max Capacity"type="text">
+                    <input class="input is-normal" id="roomCapacity" placeholder="Max Capacity" type="text">
                 </div>
 
-                 <div class="add-room-button-container">
+                <div class="add-room-button-container">
                     <button class="button is-success is-light" onclick="addRoom()">Add Room</button>
                 </div>
-        </div>
+            </div>
         </div>
     </div>
+
+    <footer class="footer sticky-footer">
+        <div class="footer-text-container">
+            © ARK - Google CSSI 2021. All Rights Reserved.
+        </div>
+    </footer>
 </body>
 
 <script src="js/admin.js"></script>
+
 </html>
