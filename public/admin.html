@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Book a Room</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+    <link href="css/bulma-calendar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css" />
+    <style type="text/css">
+
+    </style>
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+</head>
+
+<body class="has-background-light">
+    <div class="notification-container"></div>
+    <div class="header-container">
+        <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="navMenu" class="navbar-menu">
+                <div class="navbar-start">
+                    <a href="dashboard.html" class="navbar-item">
+                        Home
+                    </a>
+
+                    <a class="navbar-item">
+                        Locations
+                    </a>
+                </div>
+
+                <div class="navbar-end" id="navbar-end">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a href="#" class="navbar-link" id="user"></a>
+                        <div class="navbar-dropdown">
+                            <a href="#" class="navbar-item">My Appointments</a>
+                            <hr class="navbar-divider">
+                            <a onclick="logOut()" class="navbar-item">Log out</a>
+                        </div>
+                    </div>
+                    <div id="user" class="navbar-item">
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="body-container container mt-5">
+        <div class="avaliable-room-container">
+            <label class="label">Current Rooms List</label>
+            
+            <span class="spacer"></span>
+            <div class="white-box" id="white-box"></div>
+        </div>
+            
+        <div class="add-room-container">
+            <label class="label">Add Rooms</label>
+            <span class="spacer"></span>
+            <div class="white-box">
+                <p>Enter Room Information:</p>
+                <span class="spacer"></span>
+                <div class="control">
+                    <input class="input is-normal" id="roomName" placeholder="Room Name/Number"type="text">
+                </div>
+                <span class="spacer"></span>
+                <div class="control">
+                    <input class="input is-normal" id="roomLocation" placeholder="Location"type="text">
+                </div>
+                <span class="spacer"></span>
+                <div class="control">
+                    <input class="input is-normal" id="roomCapacity" placeholder="Max Capacity"type="text">
+                </div>
+
+                 <div class="add-room-button-container">
+                    <button class="button is-success is-light" onclick="addRoom()">Add Room</button>
+                </div>
+        </div>
+        </div>
+    </div>
+</body>
+
+<script src="js/admin.js"></script>
+</html>

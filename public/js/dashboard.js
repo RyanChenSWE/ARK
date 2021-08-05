@@ -5,23 +5,35 @@ let collaboratorContainer = document.querySelector("#collaborator-container");
 let googleUser;
 let accordions;
 var calendars;
+var startTimeString;
+var endTimeString;
 var collaboratorArray = [];
 
 initiateEmbededCalendar();
-document.querySelector("#myAppointments").addEventListener("click", openMyAppointments);
 
+document.querySelector("#myAppointments").addEventListener("click", openMyAppointments);
+document.querySelector("#butt").addEventListener("click", toggleBookModal);
+document.querySelector("#cancel").addEventListener("click", toggleBookModal);
+document.querySelector("#book").addEventListener("click", bookRoom);
 window.onload = (event) => {
   // Use this to retain user state between html pages.
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       document.querySelector("#user").innerText = user.displayName || "Anonymous";
       googleUser = user;
-      setRoomInfo();
+
+      if (googleUser.email == "admin@cssiark.com") {
+        isAdmin();
+      }
+
+      // setRoomInfo();
     } else {
       // If not logged in, navigate back to login page.
       window.location = "index.html";
     }
   });
+
+  updateRoomOptions();
 };
 
 function toggleBookModal() {
@@ -75,6 +87,23 @@ function checkCollaboratorEmpty() {
   }
 }
 
+function updateRoomOptions() {
+  const optionContainer = document.querySelector("#options-container");
+
+  firebase
+    .database()
+    .ref(`rooms/`)
+    .on("value", (snapshot) => {
+      const data = snapshot.val();
+      optionContainer.innerHTML = ``;
+
+      for (let dataIndex in data) {
+        let option = document.createElement("option");
+        option.innerHTML = dataIndex;
+        optionContainer.appendChild(option);
+      }
+    });
+}
 function resetBookModal() {
   collaboratorContainer.innerHTML = `<p class="no-friends" id="no-friends">Currently no one invited</p>`;
   collaboratorInput.value = "";
@@ -119,7 +148,7 @@ function createAlert(msg, state) {
 
 function initiateEmbededCalendar() {
   let currentDate = new Date().toJSON().slice(0, 10);
-
+  console.log("hello");
   calendars = bulmaCalendar.attach('[type="datetime"]', {
     startDate: currentDate,
     startTime: getNearestHalfHourTime(),
@@ -134,6 +163,9 @@ function initiateEmbededCalendar() {
     showFooter: false,
     minuteSteps: 30,
   });
+  startTimeString = calendars[0].time.start.toJSON().toString();
+  endTimeString = calendars[0].time.end.toJSON().toString();
+  console.log(startTimeString);
 }
 
 function logOut() {
@@ -146,6 +178,16 @@ function logOut() {
     .catch((err) => {
       createAlert(err.message, "danger");
     });
+}
+
+function isAdmin() {
+  const navBar = document.querySelector("#navbar-end");
+
+  let adminMenu = document.createElement("a");
+  adminMenu.classList.add("navbar-item");
+  adminMenu.innerHTML = "Admin Menu";
+  adminMenu.setAttribute("href", "admin.html");
+  navBar.prepend(adminMenu);
 }
 
 function addAppointment(roomId, startTime, endTime) {
@@ -300,12 +342,6 @@ function _createAccordionItem(roomId, location, capacity, startTime, endTime, gu
 function addGuests(guests) {
   const dropdown = document.createElement("div");
   dropdown.className = "dropdown";
-  // dropdown.innerHTML = `
-  //   <div class="dropdown-trigger">
-  //     <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-  //     </button>
-  //   </div>
-  // `;
 
   const dropdownTrigger = document.createElement("div");
   dropdownTrigger.className = "dropdown-trigger";
@@ -353,3 +389,5 @@ function addGuests(guests) {
 function toggleAppointmentsModal() {
   document.querySelector("#appointmentsModal").classList.toggle("is-active");
 }
+
+export { startTimeString, endTimeString };
