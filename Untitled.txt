@@ -1,8 +1,0 @@
-<script>
-    // Initialize google calendar according to user's timezone
-    // From https://stackoverflow.com/questions/9772955/how-can-i-get-the-timezone-name-in-javascript
-    const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone
-    const toURL = encodeURIComponent(userTZ)
-    const calendarSrc = `https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=${toURL}&amp;src=YTI1cDljOWU4MXV1bWJqdGQwN3EzOXJudXNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;color=%23D50000`
-    document.querySelector('iframe#calendar').setAttribute('src', calendarSrc)
-</script>
