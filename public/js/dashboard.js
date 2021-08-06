@@ -280,41 +280,40 @@ function getNearestHalfHourTime() {
 function openMyAppointments() {
   const accordionsEl = document.querySelector("#appointmentsModal").querySelector(".accordions");
 
-  if (!accordionsEl.hasChildNodes()) {
-    firebase
-      .database()
-      .ref(`rooms`)
-      .once("value", (snapshot) => {
-        const data = snapshot.val();
-        for (let room in data) {
-          const allAppointments = data[room].appointments;
-          if (allAppointments) {
-            // Filter by name from https://stackoverflow.com/questions/37615086/how-to-filter-a-dictionary-by-value-in-javascript
-            const myAppointments = Object.fromEntries(
-              Object.entries(allAppointments).filter(([_, value]) => value.name == googleUser.uid)
+  firebase
+    .database()
+    .ref(`rooms`)
+    .on("value", (snapshot) => {
+      const data = snapshot.val();
+      accordionsEl.innerHTML = "";
+      for (let room in data) {
+        const allAppointments = data[room].appointments;
+        if (allAppointments) {
+          // Filter by name from https://stackoverflow.com/questions/37615086/how-to-filter-a-dictionary-by-value-in-javascript
+          const myAppointments = Object.fromEntries(
+            Object.entries(allAppointments).filter(([_, value]) => value.name == googleUser.uid)
+          );
+          for (const appointmentId in myAppointments) {
+            const appointment = myAppointments[appointmentId];
+            const item = _createAccordionItem(
+              room,
+              appointmentId,
+              data[room].location,
+              data[room].capacity,
+              appointment.startTime,
+              appointment.endTime,
+              appointment.guests
             );
-            for (const appointmentId in myAppointments) {
-              const appointment = myAppointments[appointmentId];
-              const item = _createAccordionItem(
-                room,
-                data[room].location,
-                data[room].capacity,
-                appointment.startTime,
-                appointment.endTime,
-                appointment.guests
-              );
-              accordionsEl.appendChild(item);
-            }
+            accordionsEl.appendChild(item);
           }
         }
-      });
-
-    accordions = bulmaAccordion.attach(); // Initalize bulma Accordion
-  }
+      }
+      accordions = bulmaAccordion.attach(); // Initalize bulma Accordion
+    });
   toggleAppointmentsModal();
 }
 
-function _createAccordionItem(roomId, location, capacity, startTime, endTime, guests) {
+function _createAccordionItem(roomId, appointmentId, location, capacity, startTime, endTime, guests) {
   const parentEl = document.createElement("article");
   parentEl.className = "accordion";
 
@@ -337,8 +336,17 @@ function _createAccordionItem(roomId, location, capacity, startTime, endTime, gu
       <p>Capacity: ${capacity}</p>
     </div>
   `;
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "button is-danger is-outlined";
+  deleteBtn.innerText = "Delete Appointment";
+  deleteBtn.addEventListener("click", (e) => {
+    deleteAppointment(e, roomId, appointmentId);
+  });
+
+  bodyContent.querySelector(".column").appendChild(deleteBtn);
   const guestsCol = document.createElement("div");
-  guestsCol.className = "column";
+  guestsCol.className = "column is-flex-direction-row";
   guestsCol.appendChild(addGuests(guests));
   bodyContent.appendChild(guestsCol);
   body.appendChild(bodyContent);
@@ -399,13 +407,23 @@ function addGuests(guests) {
 function toggleAppointmentsModal() {
   document.querySelector("#appointmentsModal").classList.toggle("is-active");
 }
-function getStartTime(){
-    return startTime;
+function getStartTime() {
+  return startTime;
 }
-function getEndTime(){
-    return endTime;
+function getEndTime() {
+  return endTime;
 }
-function getRoomId(){
-    return roomId;
+function getRoomId() {
+  return roomId;
 }
+
+function deleteAppointment(e, roomId, appointmentId) {
+  firebase.database().ref(`rooms/${roomId}/appointments/${appointmentId}`).remove();
+  accordions - bulmaAccordion.attach();
+  // console.log(e);
+  // const thisAccordion = e.target.parentNode.parentNode.parentNode.parenNode;
+  // const accordionsContainer = thisAccordion.parentNode;
+  // accordionsContainer.removeChild(thisAccordion);
+}
+
 export { startTimeString, endTimeString, getEndTime, getStartTime, getRoomId };
